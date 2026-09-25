@@ -1,9 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
+import { UploadCloud } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { LogoMark, Sparkle } from "./Logo";
 
 /** Accepts files dropped anywhere on the window. */
 export function DropOverlay({ onFiles }: { onFiles: (files: File[]) => void }) {
@@ -54,22 +54,16 @@ export function DropOverlay({ onFiles }: { onFiles: (files: File[]) => void }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="pointer-events-none fixed inset-0 z-50 grid place-items-center bg-lilac/85 p-4 backdrop-blur-sm"
+          transition={{ duration: 0.15 }}
+          className="pointer-events-none fixed inset-0 z-50 grid place-items-center bg-bg/90 p-4 backdrop-blur-sm"
         >
-          <motion.div
-            initial={{ scale: 0.94, rotate: -1 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="grid h-full w-full place-items-center rounded-[2rem] border-[3px] border-dashed border-onpastel"
-          >
-            <div className="relative text-center text-onpastel">
-              <Sparkle className="absolute -start-10 -top-4 h-6 w-6 animate-twinkle text-accent" />
-              <Sparkle className="absolute -end-8 top-10 h-4 w-4 animate-twinkle text-onpastel [animation-delay:.6s]" />
-              <LogoMark className="mx-auto mb-4 h-24 w-24 animate-bob" />
-              <p className="font-display text-4xl font-bold sm:text-6xl">{t("drop.title")}</p>
-              <p className="mt-3 font-medium">{t("drop.body")}</p>
+          <div className="grid h-full w-full place-items-center rounded-2xl border border-dashed border-accent/50">
+            <div className="text-center">
+              <UploadCloud className="mx-auto mb-4 h-10 w-10 text-accent" strokeWidth={1.5} />
+              <p className="text-2xl font-medium text-fg sm:text-3xl">{t("drop.title")}</p>
+              <p className="mt-2 text-sm text-muted">{t("drop.body")}</p>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

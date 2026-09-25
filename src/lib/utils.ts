@@ -87,20 +87,3 @@ export function trimOverlap(prev: string, next: string) {
   }
   return next;
 }
-
-export const PASTELS = ["bg-butter", "bg-sky", "bg-lilac", "bg-mint", "bg-bubble"] as const;
-
-const KIND_COLORS: Record<string, string> = {
-  pdf: "bg-bubble",
-  docx: "bg-sky",
-  md: "bg-mint",
-  markdown: "bg-mint",
-  note: "bg-butter",
-  html: "bg-lilac",
-  htm: "bg-lilac",
-  csv: "bg-lime",
-  tsv: "bg-lime",
-  json: "bg-lime",
-};
-
-export const kindColor = (kind: string) => KIND_COLORS[kind] ?? "bg-sunken";

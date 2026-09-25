@@ -3,49 +3,39 @@
 @tailwind utilities;
 
 /*
- * Pastel neon brutalism: cream paper, ink outlines, hard offset shadows and candy stickers.
- * In dark mode the outlines turn cream and the shadows turn into neon.
+ * Calm, neutral surfaces with a single warm accent (matching the nugget mark). Subtle
+ * 1px borders and soft shadows instead of hard outlines — quiet by default, letting the
+ * content (and the accent, used sparingly) carry the emphasis.
  */
 :root {
-  --bg: 255 248 236;
+  --bg: 252 251 249;
   --raised: 255 255 255;
-  --sunken: 255 239 206;
-  --fg: 24 20 30;
-  --muted: 86 78 96;
-  --subtle: 138 128 146;
-  --line: 236 222 196;
-  --ink: 24 20 30;
-  --shadow: 24 20 30;
-  --accent: 255 72 160;
-  --gold: 255 191 46;
-  --butter: 255 226 130;
-  --bubble: 255 186 224;
-  --mint: 166 240 206;
-  --lilac: 204 186 255;
-  --sky: 166 220 255;
-  --lime: 204 255 84;
-  --on-pastel: 24 20 30;
-  --ok: 30 150 88;
-  --danger: 226 44 76;
-  --glow: 0 0 0 0 transparent;
+  --sunken: 246 244 240;
+  --fg: 28 26 23;
+  --muted: 100 94 87;
+  --subtle: 150 144 136;
+  --line: 228 223 215;
+  --accent: 191 111 22;
+  --accent-soft: 246 232 214;
+  --on-accent: 255 255 255;
+  --ok: 41 122 79;
+  --danger: 178 48 42;
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: 20 16 30;
-  --raised: 33 27 48;
-  --sunken: 27 22 40;
-  --fg: 255 244 232;
-  --muted: 204 192 218;
-  --subtle: 142 130 162;
-  --line: 58 48 80;
-  --ink: 255 244 232;
-  --shadow: 255 72 160;
-  --accent: 255 104 184;
-  --gold: 255 200 72;
-  --ok: 110 230 160;
-  --danger: 255 110 130;
-  --glow: 0 0 22px -2px rgb(255 72 160 / 0.55);
+  --bg: 20 19 18;
+  --raised: 29 28 26;
+  --sunken: 24 23 21;
+  --fg: 237 234 229;
+  --muted: 168 162 153;
+  --subtle: 116 111 103;
+  --line: 47 45 41;
+  --accent: 224 148 68;
+  --accent-soft: 54 42 26;
+  --on-accent: 30 20 8;
+  --ok: 112 196 152;
+  --danger: 227 122 114;
   color-scheme: dark;
 }
 
@@ -57,21 +47,15 @@
 
   body {
     @apply bg-bg text-fg antialiased;
-    background-image: radial-gradient(rgb(var(--ink) / 0.09) 1.2px, transparent 1.2px);
-    background-size: 22px 22px;
-  }
-
-  [data-theme="dark"] body {
-    background-image: radial-gradient(rgb(204 186 255 / 0.12) 1.2px, transparent 1.2px);
   }
 
   ::selection {
-    background: rgb(var(--bubble));
-    color: rgb(var(--on-pastel));
+    background: rgb(var(--accent-soft));
+    color: rgb(var(--fg));
   }
 
   :focus-visible {
-    @apply outline-none ring-[3px] ring-accent ring-offset-2 ring-offset-bg;
+    @apply outline-none ring-2 ring-accent/50 ring-offset-2 ring-offset-bg;
   }
 
   /* Tracking breaks Arabic's joined letterforms and looks wrong in CJK. */
@@ -81,61 +65,37 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--ink) / 0.35) transparent;
+    scrollbar-color: rgb(var(--subtle) / 0.4) transparent;
   }
 }
 
 @layer components {
-  /* The brutalist building block: ink outline + hard offset shadow (neon in dark mode). */
-  .brut {
-    @apply border-2 border-ink;
-    box-shadow: 4px 4px 0 0 rgb(var(--shadow)), var(--glow);
-  }
-  .brut-sm {
-    @apply border-2 border-ink;
-    box-shadow: 2px 2px 0 0 rgb(var(--shadow));
-  }
-  .press {
-    transition:
-      transform 0.14s cubic-bezier(0.3, 0.7, 0.4, 1.4),
-      box-shadow 0.14s ease,
-      background-color 0.15s ease;
-  }
-  .press:hover:not(:disabled) {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 0 rgb(var(--shadow)), var(--glow);
-  }
-  .press:active:not(:disabled) {
-    transform: translate(2px, 2px);
-    box-shadow: 0 0 0 0 rgb(var(--shadow));
-  }
-  .brut-sm.press:hover:not(:disabled) {
-    box-shadow: 4px 4px 0 0 rgb(var(--shadow));
-  }
-
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold disabled:pointer-events-none disabled:opacity-40;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-40;
   }
   .btn-ghost {
-    @apply btn text-muted transition-colors hover:bg-ink/5 hover:text-fg;
+    @apply btn text-muted hover:bg-sunken hover:text-fg;
   }
   .btn-solid {
-    @apply btn brut-sm press bg-gold text-onpastel;
+    @apply btn bg-accent text-on-accent hover:bg-accent/90;
+  }
+  .btn-outline {
+    @apply btn border border-line bg-raised text-fg hover:bg-sunken;
   }
   .icon-btn {
-    @apply btn brut-sm press h-9 w-9 shrink-0 bg-raised text-fg;
-  }
-  .icon-btn-quiet {
-    @apply btn-ghost h-8 w-8 shrink-0;
+    @apply btn-ghost h-9 w-9 shrink-0;
   }
   .eyebrow {
-    @apply font-mono text-2xs font-bold uppercase tracking-[0.12em] text-muted;
+    @apply font-mono text-2xs font-medium uppercase tracking-wider text-subtle;
   }
-  .sticker {
-    @apply inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-2xs font-bold uppercase tracking-wider text-onpastel;
+  .tag {
+    @apply inline-flex items-center gap-1 rounded-md border border-line px-1.5 py-0.5 font-mono text-2xs text-subtle;
   }
   .field {
-    @apply w-full rounded-xl border-2 border-ink bg-raised px-3 py-2 text-sm placeholder:text-subtle focus:outline-none focus:ring-[3px] focus:ring-accent/40;
+    @apply w-full rounded-lg border border-line bg-raised px-3 py-2 text-sm placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-accent/35;
+  }
+  .card {
+    @apply rounded-xl border border-line bg-raised;
   }
 }
 
@@ -143,38 +103,15 @@
   .streaming > :last-child::after {
     content: "";
     display: inline-block;
-    width: 0.6ch;
+    width: 0.55ch;
     height: 1.05em;
-    margin-inline-start: 3px;
+    margin-inline-start: 2px;
     vertical-align: -0.15em;
-    border-radius: 2px;
     background: rgb(var(--accent));
-    box-shadow: 0 0 10px rgb(var(--accent) / 0.8);
-    animation: blink 0.9s steps(1) infinite;
+    animation: blink 1s steps(1) infinite;
   }
   .marker {
-    background-image: linear-gradient(transparent 58%, rgb(var(--butter) / 0.9) 58%);
-  }
-  [data-theme="dark"] .marker {
-    background-image: linear-gradient(transparent 62%, rgb(255 72 160 / 0.45) 62%);
-  }
-  .neon-text {
-    text-shadow: none;
-  }
-  [data-theme="dark"] .neon-text {
-    text-shadow:
-      0 0 12px rgb(var(--accent) / 0.7),
-      0 0 2px rgb(var(--accent));
-  }
-  /* Keeps prose readable on pastel fills, which stay light in dark mode. */
-  .on-pastel .prose {
-    --tw-prose-body: rgb(var(--on-pastel) / 0.9);
-    --tw-prose-headings: rgb(var(--on-pastel));
-    --tw-prose-bold: rgb(var(--on-pastel));
-    --tw-prose-bullets: rgb(var(--on-pastel));
-    --tw-prose-counters: rgb(var(--on-pastel));
-    --tw-prose-td-borders: rgb(var(--on-pastel) / 0.25);
-    --tw-prose-th-borders: rgb(var(--on-pastel));
+    background-image: linear-gradient(transparent 62%, rgb(var(--accent-soft)) 62%);
   }
   .scrollbar-none {
     scrollbar-width: none;

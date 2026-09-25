@@ -3,32 +3,121 @@
 @tailwind utilities;
 
 :root {
+  --bg: 246 243 237;
+  --raised: 253 251 247;
+  --sunken: 237 233 224;
+  --fg: 28 26 23;
+  --muted: 98 93 84;
+  --subtle: 146 140 129;
+  --line: 222 215 202;
+  --accent: 200 72 30;
+  --ok: 46 120 82;
+  --danger: 186 44 38;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: 18 17 15;
+  --raised: 27 26 23;
+  --sunken: 13 12 11;
+  --fg: 236 231 221;
+  --muted: 168 161 148;
+  --subtle: 112 107 98;
+  --line: 48 46 41;
+  --accent: 240 122 70;
+  --ok: 116 196 146;
+  --danger: 240 104 92;
   color-scheme: dark;
 }
 
-body {
-  background: radial-gradient(1200px 600px at 80% -10%, rgba(124, 92, 255, 0.15), transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, rgba(92, 225, 214, 0.1), transparent 55%),
-    #0a0a0f;
-  color: #e7e7f0;
-  min-height: 100vh;
+@layer base {
+  html,
+  body {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-bg text-fg antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  /* Paper grain: a barely-there texture that keeps flat surfaces from feeling synthetic. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  [data-theme="dark"] body::before {
+    opacity: 0.06;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.22);
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent/60 ring-offset-2 ring-offset-bg;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--line)) transparent;
+  }
 }
 
-::selection {
-  background: rgba(124, 92, 255, 0.4);
-}
-
-.glass {
-  background: rgba(24, 24, 34, 0.6);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-[background-color,color,transform,opacity] duration-150 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40;
+  }
+  .btn-ghost {
+    @apply btn text-muted hover:bg-sunken hover:text-fg;
+  }
+  .btn-solid {
+    @apply btn bg-fg text-bg hover:bg-fg/85;
+  }
+  .icon-btn {
+    @apply btn-ghost h-8 w-8 shrink-0;
+  }
+  .eyebrow {
+    @apply font-mono text-2xs uppercase tracking-[0.14em] text-subtle;
+  }
+  .hairline {
+    @apply border-line;
+  }
 }
 
 @layer utilities {
-  .text-gradient {
-    background: linear-gradient(120deg, #a78bfa, #5ce1d6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  .streaming > :last-child::after {
+    content: "";
+    display: inline-block;
+    width: 0.55ch;
+    height: 1.05em;
+    margin-inline-start: 2px;
+    vertical-align: -0.15em;
+    background: rgb(var(--accent));
+    animation: blink 1s steps(1) infinite;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -1,189 +1,312 @@
 "use client";
 
-import { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import { Sparkles, Upload, Send, FileText, Loader2, Database } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { Download, Menu, Plus } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Composer } from "@/components/Composer";
+import { DocumentViewer } from "@/components/DocumentViewer";
+import { DropOverlay } from "@/components/DropOverlay";
+import { EmptyState } from "@/components/EmptyState";
+import { Exchange } from "@/components/Exchange";
+import { LogoMark } from "@/components/Logo";
+import { PasteDialog } from "@/components/PasteDialog";
+import { Sidebar } from "@/components/Sidebar";
+import { Toasts } from "@/components/Toasts";
+import { useConversations } from "@/hooks/useConversations";
+import { useLibrary } from "@/hooks/useLibrary";
+import { useToasts } from "@/hooks/useToasts";
+import { I18nProvider, useI18n } from "@/lib/i18n";
+import { SAMPLE_TEXT, SAMPLE_TITLE } from "@/lib/sample";
+import type { LibraryDoc, Message, Source, Thread } from "@/lib/types";
 
-type Source = {
-  content: string;
-  metadata: Record<string, unknown>;
-  score: number;
-};
-
-type Result = {
-  answer: string;
-  sources: Source[];
-};
-
-export default function Home() {
-  const [question, setQuestion] = useState("");
-  const [result, setResult] = useState<Result | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [ingesting, setIngesting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [docs, setDocs] = useState<number | null>(null);
-
-  async function refreshHealth() {
-    try {
-      const res = await fetch("http://localhost:8000/health");
-      const data = await res.json();
-      setDocs(data.docs);
-    } catch {
-      setDocs(null);
+function toMarkdown(thread: Thread) {
+  const lines = [`# ${thread.title}`, ""];
+  for (const m of thread.messages) {
+    if (m.role === "user") lines.push(`## ${m.content}`, "");
+    else {
+      lines.push(m.content || m.error || "", "");
+      m.sources?.forEach((s, i) => lines.push(`[${i + 1}]: ${s.source}${s.page ? `, p. ${s.page}` : ""}`));
+      lines.push("");
     }
   }
+  return lines.join("\n");
+}
 
-  async function handleQuery(e: React.FormEvent) {
-    e.preventDefault();
-    if (!question.trim() || loading) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("http://localhost:8000/query", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
-      });
-      if (!res.ok) throw new Error("Query failed");
-      setResult(await res.json());
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }
+function download(name: string, text: string) {
+  const url = URL.createObjectURL(new Blob([text], { type: "text/markdown;charset=utf-8" }));
+  const a = Object.assign(document.createElement("a"), { href: url, download: name });
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
-  async function handleFile(file: File) {
-    setIngesting(true);
-    setError(null);
-    try {
-      const form = new FormData();
-      form.append("file", file);
-      const res = await fetch("http://localhost:8000/ingest/file", {
-        method: "POST",
-        body: form,
-      });
-      if (!res.ok) throw new Error("Ingest failed");
-      await refreshHealth();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
-    } finally {
-      setIngesting(false);
-    }
+function pairs(messages: Message[]) {
+  const out: { question: Message; answer?: Message }[] = [];
+  for (const m of messages) {
+    if (m.role === "user") out.push({ question: m });
+    else if (out.length) out[out.length - 1].answer = m;
   }
+  return out;
+}
+
+function Lumen() {
+  const { t, dir } = useI18n();
+  const { toasts, push, dismiss } = useToasts();
+  const library = useLibrary(push);
+  const conversations = useConversations();
+  const [draft, setDraft] = useState("");
+  const [drawer, setDrawer] = useState(false);
+  const [tab, setTab] = useState<"library" | "history">("library");
+  const [viewer, setViewer] = useState<{ doc: LibraryDoc; chunk: string | null } | null>(null);
+  const [pasteOpen, setPasteOpen] = useState(false);
+  const [loadingSample, setLoadingSample] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const scroller = useRef<HTMLDivElement>(null);
+  const stick = useRef(true);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const { active, busy } = conversations;
+  const { docs, selected, scope } = library;
+  const docIds = scope === null ? null : selected;
+  const blocked = docs.length > 0 && selected.length === 0 ? t("composer.noScope") : null;
+  const scopeLabel = scope === null ? t("library.scopeAll") : t("library.scopeSome", { count: selected.length, total: docs.length });
+
+  const submit = useCallback(
+    (text?: string) => {
+      const q = (text ?? draft).trim();
+      if (!q || blocked) return;
+      stick.current = true;
+      conversations.ask(q, docIds);
+      setDraft("");
+    },
+    [blocked, conversations, docIds, draft],
+  );
+
+  // Follow the streaming answer unless the reader has scrolled up.
+  useEffect(() => {
+    const el = scroller.current;
+    if (el && stick.current) el.scrollTo({ top: el.scrollHeight, behavior: busy ? "auto" : "smooth" });
+  }, [active?.messages, busy]);
+
+  useEffect(() => {
+    stick.current = true;
+    scroller.current?.scrollTo({ top: scroller.current.scrollHeight });
+  }, [active?.id]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const typing = e.target instanceof HTMLElement && /^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        conversations.newThread();
+        inputRef.current?.focus();
+      } else if (e.key === "/" && !typing) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      } else if (e.key === "Escape" && busy) {
+        conversations.stop();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [busy, conversations]);
+
+  const openSource = useCallback(
+    (source: Source) => {
+      const doc = docs.find((d) => d.id === source.doc_id);
+      if (doc) setViewer({ doc, chunk: source.id });
+    },
+    [docs],
+  );
+
+  const exportThread = useCallback(
+    (thread: Thread) => {
+      const slug = thread.title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").slice(0, 48) || "conversation";
+      download(`${slug}.md`, toMarkdown(thread));
+      push(t("toast.exported"), "ok");
+    },
+    [push, t],
+  );
+
+  const loadSample = async () => {
+    setLoadingSample(true);
+    await library.addText(SAMPLE_TEXT, SAMPLE_TITLE);
+    setLoadingSample(false);
+  };
+
+  const sidebar = (
+    <Sidebar
+      library={library}
+      conversations={conversations}
+      tab={tab}
+      onTab={setTab}
+      onOpenDoc={(doc) => setViewer({ doc, chunk: null })}
+      onPaste={() => setPasteOpen(true)}
+      onExport={exportThread}
+      onNavigate={() => setDrawer(false)}
+    />
+  );
+
+  const exchanges = active ? pairs(active.messages) : [];
+  const offscreen = dir === "rtl" ? "100%" : "-100%";
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-16">
-      <header className="animate-fade-up mb-14 text-center">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-1.5 text-xs text-white/60">
-          <Sparkles className="h-3.5 w-3.5 text-glow" />
-          Retrieval-Augmented Generation
-        </div>
-        <h1 className="text-5xl font-semibold tracking-tight">
-          <span className="text-gradient">Lumen</span>
-        </h1>
-        <p className="mt-4 text-white/50">
-          Ask your documents. Get grounded, cited answers.
-        </p>
-      </header>
+    <div className="flex h-[100dvh] overflow-hidden">
+      <aside className="hidden w-[18.5rem] shrink-0 border-e border-line bg-bg lg:block">{sidebar}</aside>
 
-      <div className="animate-fade-up mb-8 grid grid-cols-3 gap-3" style={{ animationDelay: "80ms" }}>
-        {[
-          { label: "Docs indexed", value: docs ?? "—", icon: Database },
-          { label: "Model", value: "gpt-4o-mini", icon: Sparkles },
-          { label: "Store", value: "Chroma", icon: FileText },
-        ].map((s) => (
-          <div key={s.label} className="glass rounded-2xl p-4">
-            <s.icon className="mb-2 h-4 w-4 text-mint" />
-            <div className="text-lg font-medium">{s.value}</div>
-            <div className="text-xs text-white/40">{s.label}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="animate-fade-up" style={{ animationDelay: "140ms" }}>
-        <label className="glass group mb-6 flex cursor-pointer items-center justify-center gap-3 rounded-2xl border-dashed p-8 transition hover:border-glow/40">
-          <Upload className="h-5 w-5 text-white/40 transition group-hover:text-glow" />
-          <span className="text-sm text-white/50">
-            {ingesting ? "Ingesting…" : "Drop a PDF or text file to index"}
-          </span>
-          <input
-            type="file"
-            className="hidden"
-            accept=".pdf,.txt,.md,.csv,.json"
-            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
-          />
-        </label>
-
-        <form onSubmit={handleQuery} className="glass rounded-3xl p-2 focus-within:border-glow/40">
-          <textarea
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleQuery(e);
-              }
-            }}
-            placeholder="Ask anything about your documents…"
-            rows={2}
-            className="w-full resize-none bg-transparent px-4 py-3 text-lg placeholder:text-white/30 focus:outline-none"
-          />
-          <div className="flex items-center justify-between px-3 pb-2">
-            <span className="text-xs text-white/30">Enter to send · Shift+Enter for newline</span>
-            <button
-              type="submit"
-              disabled={loading || !question.trim()}
-              className="flex items-center gap-2 rounded-xl bg-glow px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-30"
+      <AnimatePresence>
+        {drawer && (
+          <>
+            <motion.div className="fixed inset-0 z-40 bg-fg/25 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDrawer(false)} />
+            <motion.aside
+              className="fixed inset-y-0 start-0 z-50 w-[min(20rem,88vw)] border-e border-line bg-bg shadow-pop lg:hidden"
+              initial={{ x: offscreen }}
+              animate={{ x: 0 }}
+              exit={{ x: offscreen }}
+              transition={{ type: "spring", stiffness: 380, damping: 38 }}
             >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              Ask
+              {sidebar}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      <main className="relative flex min-w-0 flex-1 flex-col">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-line/70 px-3 sm:px-5 lg:border-transparent">
+          <button type="button" className="icon-btn lg:hidden" onClick={() => setDrawer(true)} aria-label={t("app.menu")}>
+            <Menu className="h-4 w-4" />
+          </button>
+          <span className="lg:hidden">
+            <LogoMark />
+          </span>
+          <p className="min-w-0 flex-1 truncate text-sm text-muted" dir="auto">
+            {active?.title}
+          </p>
+          {active && (
+            <button type="button" className="icon-btn" onClick={() => exportThread(active)} title={t("history.export")} aria-label={t("history.export")}>
+              <Download className="h-4 w-4" />
             </button>
+          )}
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={() => {
+              conversations.newThread();
+              inputRef.current?.focus();
+            }}
+            title={`${t("app.newChat")} (Ctrl K)`}
+            aria-label={t("app.newChat")}
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </header>
+
+        {library.online === false && (
+          <div className="border-b border-danger/20 bg-danger/5 px-4 py-2 text-center text-xs text-danger">
+            {t("status.offlineBody")} <code className="rounded bg-danger/10 px-1 font-mono">uv run uvicorn app.main:app</code>
           </div>
-        </form>
-      </div>
+        )}
+        {library.health && !library.health.llm_configured && (
+          <div className="border-b border-line bg-sunken px-4 py-2 text-center text-xs text-muted">{t("status.noKey")}</div>
+        )}
 
-      {error && (
-        <div className="animate-fade-up mt-6 rounded-2xl border border-ember/40 bg-ember/10 p-4 text-sm text-ember">
-          {error}
-        </div>
-      )}
-
-      {result && (
-        <div className="animate-fade-up mt-8 space-y-6">
-          <div className="glass rounded-3xl p-6">
-            <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-wider text-mint">
-              <Sparkles className="h-3.5 w-3.5" /> Answer
-            </div>
-            <div className="prose prose-invert max-w-none text-white/80">
-              <ReactMarkdown>{result.answer}</ReactMarkdown>
-            </div>
-          </div>
-
-          {result.sources.length > 0 && (
-            <div>
-              <div className="mb-3 text-xs uppercase tracking-wider text-white/40">
-                Sources ({result.sources.length})
-              </div>
-              <div className="space-y-3">
-                {result.sources.map((s, i) => (
-                  <details key={i} className="glass group rounded-2xl p-4">
-                    <summary className="flex cursor-pointer items-center justify-between text-sm text-white/70">
-                      <span className="truncate">
-                        {String(s.metadata.source ?? `Chunk ${i + 1}`)}
-                      </span>
-                      <span className="ml-3 rounded-full bg-white/5 px-2 py-0.5 text-xs text-mint">
-                        {(s.score * 100).toFixed(0)}%
-                      </span>
-                    </summary>
-                    <p className="mt-3 text-sm leading-relaxed text-white/50">{s.content}</p>
-                  </details>
-                ))}
-              </div>
+        <div
+          ref={scroller}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+          }}
+          className="flex min-h-0 flex-1 flex-col overflow-y-auto"
+        >
+          {exchanges.length === 0 ? (
+            <EmptyState
+              docs={docs}
+              onPick={(q) => submit(q)}
+              onBrowse={() => fileRef.current?.click()}
+              onSample={loadSample}
+              loadingSample={loadingSample}
+            />
+          ) : (
+            <div className="mx-auto w-full max-w-3xl divide-y divide-line px-4 sm:px-8">
+              {exchanges.map(({ question, answer }, i) => {
+                const last = i === exchanges.length - 1;
+                return (
+                  <Exchange
+                    key={question.id}
+                    question={question}
+                    answer={answer}
+                    live={busy && last}
+                    followUp={i > 0}
+                    scopeCount={docIds === null ? null : docIds.length}
+                    canRegenerate={last && !busy}
+                    onRegenerate={() => answer && conversations.regenerate(answer.id, docIds)}
+                    onOpenSource={openSource}
+                  />
+                );
+              })}
             </div>
           )}
+          <div className="h-6 shrink-0" />
         </div>
-      )}
-    </main>
+
+        <div className="relative shrink-0 px-3 pb-safe sm:px-8">
+          <div className="pointer-events-none absolute inset-x-0 -top-8 h-8 bg-gradient-to-t from-bg to-transparent" />
+          <div className="mx-auto w-full max-w-3xl sm:pb-2">
+            <Composer
+              value={draft}
+              onChange={setDraft}
+              onSubmit={() => submit()}
+              onStop={conversations.stop}
+              onFiles={library.upload}
+              onScopeClick={() => {
+                setTab("library");
+                if (window.matchMedia("(max-width: 1023px)").matches) setDrawer(true);
+              }}
+              busy={busy}
+              followUp={exchanges.length > 0}
+              scopeLabel={scopeLabel}
+              blocked={blocked}
+              inputRef={inputRef}
+            />
+          </div>
+        </div>
+        <input
+          ref={fileRef}
+          type="file"
+          multiple
+          hidden
+          onChange={(e) => {
+            const files = Array.from(e.target.files ?? []);
+            e.target.value = "";
+            if (files.length) library.upload(files);
+          }}
+        />
+      </main>
+
+      <DocumentViewer
+        doc={viewer?.doc ?? null}
+        focusChunk={viewer?.chunk ?? null}
+        onClose={() => setViewer(null)}
+        onOnly={(doc) => {
+          library.setScope([doc.id]);
+          setViewer(null);
+          inputRef.current?.focus();
+        }}
+        onDelete={(doc) => {
+          library.remove(doc);
+          setViewer(null);
+        }}
+      />
+      <PasteDialog open={pasteOpen} onClose={() => setPasteOpen(false)} onSubmit={(text, title) => library.addText(text, title)} />
+      <DropOverlay onFiles={library.upload} />
+      <Toasts toasts={toasts} dismiss={dismiss} />
+    </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <I18nProvider>
+      <Lumen />
+    </I18nProvider>
   );
 }

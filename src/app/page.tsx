@@ -153,14 +153,14 @@ function Nugget() {
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
-      <aside className="hidden w-[18.5rem] shrink-0 border-e border-line bg-bg lg:block">{sidebar}</aside>
+      <aside className="hidden w-[18.5rem] shrink-0 border-e-2 border-fg bg-bg lg:block">{sidebar}</aside>
 
       <AnimatePresence>
         {drawer && (
           <>
             <motion.div className="fixed inset-0 z-40 bg-fg/15 backdrop-blur-[1px] dark:bg-black/40 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDrawer(false)} />
             <motion.aside
-              className="fixed inset-y-0 start-0 z-50 w-[min(20rem,88vw)] border-e border-line bg-bg shadow-lg lg:hidden"
+              className="fixed inset-y-0 start-0 z-50 w-[min(20rem,88vw)] border-e-2 border-fg bg-bg shadow-lg lg:hidden"
               initial={{ x: offscreen }}
               animate={{ x: 0 }}
               exit={{ x: offscreen }}
@@ -190,7 +190,7 @@ function Nugget() {
           )}
           <button
             type="button"
-            className="icon-btn"
+            className="btn-solid h-9 w-9 rounded-lg"
             onClick={() => {
               conversations.newThread();
               inputRef.current?.focus();

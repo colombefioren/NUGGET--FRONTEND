@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 /*
- * Calm, neutral surfaces with a single warm accent (matching the nugget mark). Subtle
- * 1px borders and soft shadows instead of hard outlines — quiet by default, letting the
- * content (and the accent, used sparingly) carry the emphasis.
+ * Neon brutalism, restrained: one warm accent (matching the nugget mark) instead of a
+ * rainbow of pastels, bold ink outlines with a hard offset shadow, and a glowing accent
+ * shadow in dark mode. The structure stays graphic and confident; the surface stays quiet —
+ * no stickers, no mascot animation, no rotation — so the emphasis lands on content, not noise.
  */
 :root {
   --bg: 252 251 249;
@@ -20,6 +21,8 @@
   --on-accent: 255 255 255;
   --ok: 41 122 79;
   --danger: 178 48 42;
+  --shadow: 28 26 23;
+  --glow: 0 0 0 0 transparent;
   color-scheme: light;
 }
 
@@ -36,6 +39,8 @@
   --on-accent: 30 20 8;
   --ok: 112 196 152;
   --danger: 227 122 114;
+  --shadow: 224 148 68;
+  --glow: 0 0 18px -3px rgb(224 148 68 / 0.5);
   color-scheme: dark;
 }
 
@@ -70,17 +75,41 @@
 }
 
 @layer components {
+  /* The brutalist building block: a bold outline plus a hard offset shadow that glows
+     amber in dark mode. Used sparingly — on primary surfaces, not on every element. */
+  .brut {
+    @apply border-2 border-fg;
+    box-shadow: 3px 3px 0 0 rgb(var(--shadow)), var(--glow);
+  }
+  .brut-sm {
+    @apply border-2 border-fg;
+    box-shadow: 2px 2px 0 0 rgb(var(--shadow));
+  }
+  .press {
+    transition:
+      transform 0.12s cubic-bezier(0.3, 0.7, 0.4, 1.4),
+      box-shadow 0.12s ease;
+  }
+  .press:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 0 rgb(var(--shadow)), var(--glow);
+  }
+  .press:active:not(:disabled) {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 rgb(var(--shadow));
+  }
+
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-40;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium disabled:pointer-events-none disabled:opacity-40;
   }
   .btn-ghost {
-    @apply btn text-muted hover:bg-sunken hover:text-fg;
+    @apply btn text-muted transition-colors hover:bg-sunken hover:text-fg;
   }
   .btn-solid {
-    @apply btn bg-accent text-on-accent hover:bg-accent/90;
+    @apply btn brut-sm press bg-accent text-on-accent;
   }
   .btn-outline {
-    @apply btn border border-line bg-raised text-fg hover:bg-sunken;
+    @apply btn brut-sm press bg-raised text-fg;
   }
   .icon-btn {
     @apply btn-ghost h-9 w-9 shrink-0;
@@ -92,10 +121,10 @@
     @apply inline-flex items-center gap-1 rounded-md border border-line px-1.5 py-0.5 font-mono text-2xs text-subtle;
   }
   .field {
-    @apply w-full rounded-lg border border-line bg-raised px-3 py-2 text-sm placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-accent/35;
+    @apply brut w-full rounded-xl bg-raised px-3 py-2 text-sm placeholder:text-subtle focus:outline-none;
   }
   .card {
-    @apply rounded-xl border border-line bg-raised;
+    @apply brut-sm rounded-xl bg-raised;
   }
 }
 
@@ -111,6 +140,9 @@
     animation: blink 1s steps(1) infinite;
   }
   .marker {
+    /* <mark> has a browser-default yellow background-color that Tailwind's preflight
+       doesn't reset; without this it shows through the gradient's transparent top half. */
+    background-color: transparent;
     background-image: linear-gradient(transparent 62%, rgb(var(--accent-soft)) 62%);
   }
   .scrollbar-none {

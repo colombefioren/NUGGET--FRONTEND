@@ -71,7 +71,7 @@ export function DocumentViewer({ doc, focusChunk, onClose, onOnly, onDelete }: P
             animate={{ x: 0 }}
             exit={{ x: offscreen }}
             transition={{ duration: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
-            className="fixed inset-y-0 end-0 z-50 flex w-full flex-col border-s border-line bg-bg shadow-lg sm:w-[34rem]"
+            className="fixed inset-y-0 end-0 z-50 flex w-full flex-col border-s-2 border-fg bg-bg shadow-lg sm:w-[34rem]"
           >
             <header className="flex items-start gap-3 border-b border-line px-5 pb-4 pt-5">
               <div className="min-w-0 flex-1">

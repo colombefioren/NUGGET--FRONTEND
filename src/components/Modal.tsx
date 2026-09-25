@@ -40,7 +40,7 @@ export function Modal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, transition: { duration: 0.15 } }}
             transition={{ duration: 0.22, ease: [0.2, 0.7, 0.3, 1] }}
-            className="card relative w-full rounded-t-2xl p-5 pb-safe shadow-lg sm:max-w-lg sm:rounded-2xl sm:pb-5"
+            className="brut relative w-full rounded-t-2xl bg-raised p-5 pb-safe sm:max-w-lg sm:rounded-2xl sm:pb-5"
           >
             {children}
           </motion.div>

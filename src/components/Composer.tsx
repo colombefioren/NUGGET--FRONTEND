@@ -40,7 +40,7 @@ export function Composer({ value, onChange, onSubmit, onStop, onFiles, onScopeCl
         e.preventDefault();
         if (canSend) onSubmit();
       }}
-      className="rounded-2xl border border-line bg-raised shadow-sm transition-colors focus-within:border-accent/40"
+      className="brut rounded-2xl bg-raised transition-transform focus-within:-translate-y-0.5"
     >
       <textarea
         ref={inputRef}

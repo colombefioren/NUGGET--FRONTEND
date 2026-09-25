@@ -48,7 +48,7 @@ export function LanguageMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, transition: { duration: 0.12 } }}
             transition={{ duration: 0.15 }}
-            className="card absolute bottom-full end-0 z-50 mb-2 w-52 origin-bottom-right overflow-hidden p-1 shadow-md"
+            className="absolute bottom-full end-0 z-50 mb-2 w-52 origin-bottom-right overflow-hidden rounded-xl border border-line bg-raised p-1 shadow-md"
           >
             {LOCALES.map((l) => (
               <li key={l.code}>

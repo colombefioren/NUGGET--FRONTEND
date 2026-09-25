@@ -11,7 +11,7 @@ const ICONS = { system: Monitor, light: Sun, dark: Moon };
 
 export function ThemeToggle() {
   const { t } = useI18n();
-  const [theme, setTheme] = usePersistentState<Theme>("theme", "system");
+  const [theme, setTheme] = usePersistentState<Theme>("theme", "light");
 
   useEffect(() => {
     const media = matchMedia("(prefers-color-scheme: dark)");

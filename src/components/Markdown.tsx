@@ -38,7 +38,7 @@ function MarkdownImpl({ text, streaming, renderCitation }: Props) {
   return (
     <div
       className={cn(
-        "prose max-w-none text-[0.98rem] leading-[1.75] prose-p:my-3 prose-headings:font-display prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-li:my-1 prose-strong:marker prose-code:rounded-md prose-code:border-2 prose-code:border-ink prose-code:bg-butter prose-code:px-1 prose-code:py-0.5 prose-code:text-[0.82em] prose-code:font-medium prose-pre:rounded-2xl prose-pre:border-2 prose-pre:border-ink prose-table:text-sm prose-th:font-display",
+        "prose max-w-none text-[0.975rem] leading-[1.7] prose-p:my-3 prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-li:my-1 prose-strong:marker prose-code:rounded prose-code:border prose-code:border-line prose-code:bg-sunken prose-code:px-1 prose-code:py-0.5 prose-code:text-[0.85em] prose-code:font-normal prose-pre:rounded-lg prose-pre:border prose-pre:border-line prose-table:text-sm",
         streaming && "streaming",
       )}
     >

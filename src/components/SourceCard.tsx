@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { useI18n } from "@/lib/i18n";
 import type { Source } from "@/lib/types";
-import { PASTELS, cn, highlightTerms, plainText } from "@/lib/utils";
+import { cn, highlightTerms, plainText } from "@/lib/utils";
 
 type Props = {
   source: Source;
@@ -20,45 +20,44 @@ export function SourceCard({ source, index, cited, highlighted, query, onHover, 
   const snippet = plainText(source.content).slice(0, 320);
   // Fused RRF scores saturate on small libraries, so the meter shows semantic similarity.
   const meter = source.vector_score ?? source.score;
-  const pastel = PASTELS[index % PASTELS.length];
   return (
     <motion.button
       type="button"
       id={`source-${source.id}`}
-      initial={{ opacity: 0, y: 14, rotate: index % 2 ? 1.5 : -1.5 }}
-      animate={{ opacity: 1, y: 0, rotate: 0 }}
-      transition={{ delay: 0.05 * index, type: "spring", stiffness: 380, damping: 24 }}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.03 * index, duration: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
       onMouseEnter={() => onHover(index + 1)}
       onMouseLeave={() => onHover(null)}
       onFocus={() => onHover(index + 1)}
       onBlur={() => onHover(null)}
       onClick={onOpen}
       className={cn(
-        "brut-sm press group relative flex w-[78vw] max-w-[20rem] shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-2xl p-3.5 text-start sm:w-auto sm:max-w-none",
-        highlighted ? "-translate-x-0.5 -translate-y-0.5 bg-butter text-onpastel" : "bg-raised",
-        !cited && !highlighted && "border-dashed opacity-70 hover:opacity-100",
+        "group relative flex w-[78vw] max-w-[20rem] shrink-0 snap-start flex-col gap-2 rounded-lg border p-3.5 text-start transition-colors sm:w-auto sm:max-w-none",
+        highlighted ? "border-accent/50 bg-accent-soft/40" : "border-line bg-raised hover:border-subtle",
+        !cited && !highlighted && "opacity-60 hover:opacity-100",
       )}
     >
       <div className="flex items-center gap-2">
         <span
           className={cn(
-            "grid h-6 min-w-6 place-items-center rounded-lg border-2 border-ink px-1 font-mono text-2xs font-bold tabular-nums",
-            cited ? "bg-gold text-onpastel" : "bg-transparent",
+            "grid h-5 min-w-5 place-items-center rounded px-1 font-mono text-2xs tabular-nums",
+            cited ? "bg-accent-soft text-accent" : "text-subtle",
           )}
         >
           {index + 1}
         </span>
-        <span className="min-w-0 flex-1 truncate text-start text-[0.8rem] font-bold" dir="auto">
+        <span className="min-w-0 flex-1 truncate text-start text-[0.8rem] font-medium text-fg" dir="auto">
           {source.source}
         </span>
-        <span className="shrink-0 font-mono text-2xs opacity-60">
+        <span className="shrink-0 font-mono text-2xs text-subtle">
           {source.page ? t("answer.page", { page: source.page }) : `§${source.chunk + 1}`}
         </span>
       </div>
-      <p className={cn("line-clamp-3 text-[0.8rem] leading-relaxed", highlighted ? "text-onpastel/80" : "text-muted")}>
+      <p className="line-clamp-3 text-[0.8rem] leading-relaxed text-muted">
         {highlightTerms(snippet, query).map((part, i) =>
           part.hit ? (
-            <mark key={i} className="rounded bg-bubble px-0.5 font-semibold text-onpastel">
+            <mark key={i} className="marker rounded-sm text-fg">
               {part.text}
             </mark>
           ) : (
@@ -68,23 +67,23 @@ export function SourceCard({ source, index, cited, highlighted, query, onHover, 
       </p>
       <div className="mt-auto flex items-center gap-2 pt-1">
         <div
-          className="h-3 flex-1 overflow-hidden rounded-full border-2 border-ink bg-raised"
+          className="h-1 flex-1 overflow-hidden rounded-full bg-sunken"
           title={t("answer.semantic", { value: meter.toFixed(2) })}
         >
           <motion.div
-            className={cn("h-full border-e-2 border-ink", pastel)}
+            className="h-full rounded-full bg-accent/70"
             initial={{ width: 0 }}
-            animate={{ width: `${Math.max(8, meter * 100)}%` }}
-            transition={{ delay: 0.2 + 0.05 * index, type: "spring", stiffness: 120, damping: 18 }}
+            animate={{ width: `${Math.max(6, meter * 100)}%` }}
+            transition={{ delay: 0.1 + 0.03 * index, duration: 0.4, ease: [0.2, 0.7, 0.3, 1] }}
           />
         </div>
-        <span className="font-mono text-2xs font-bold tabular-nums">{meter.toFixed(2)}</span>
+        <span className="font-mono text-2xs tabular-nums text-subtle">{meter.toFixed(2)}</span>
         {source.keyword_rank && (
-          <span className="font-mono text-2xs opacity-60" title={t("answer.keyword", { rank: source.keyword_rank })}>
+          <span className="font-mono text-2xs text-subtle" title={t("answer.keyword", { rank: source.keyword_rank })}>
             kw#{source.keyword_rank}
           </span>
         )}
-        {!cited && <span className="font-mono text-2xs opacity-60">· {t("answer.notCited")}</span>}
+        {!cited && <span className="font-mono text-2xs text-subtle">· {t("answer.notCited")}</span>}
       </div>
     </motion.button>
   );

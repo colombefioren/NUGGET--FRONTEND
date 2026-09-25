@@ -1,13 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Copy, RotateCcw } from "lucide-react";
+import { Check, Copy, Loader2, RotateCcw } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import type { Message, Phase, Source } from "@/lib/types";
 import { cn, formatDuration } from "@/lib/utils";
 import { Citation } from "./Citation";
-import { LogoMark } from "./Logo";
 import { Markdown } from "./Markdown";
 import { SourceCard } from "./SourceCard";
 
@@ -15,53 +14,30 @@ type Props = {
   question: Message;
   answer?: Message;
   live: boolean;
-  followUp: boolean;
   scopeCount: number | null;
   canRegenerate: boolean;
   onRegenerate: () => void;
   onOpenSource: (source: Source) => void;
 };
 
-const STEPS: Phase[] = ["rewriting", "searching", "writing"];
-const STEP_COLORS = ["bg-lilac", "bg-sky", "bg-mint"];
-
-function PhaseTrack({ phase, hasHistory, scopeCount }: { phase: Phase; hasHistory: boolean; scopeCount: number | null }) {
+function PhaseLine({ phase, scopeCount }: { phase: Phase; scopeCount: number | null }) {
   const { t } = useI18n();
-  const steps = hasHistory ? STEPS : STEPS.slice(1);
-  const colors = hasHistory ? STEP_COLORS : STEP_COLORS.slice(1);
-  const current = steps.indexOf(phase);
   const scope = scopeCount === null ? t("phase.allDocs") : t("phase.someDocs", { count: scopeCount });
+  const label =
+    phase === "rewriting"
+      ? t("phase.rewriting")
+      : phase === "searching"
+        ? t("phase.searching", { scope })
+        : t("phase.writing");
   return (
-    <div className="flex items-center gap-4">
-      <LogoMark className="h-10 w-10 shrink-0 animate-bob" />
-      <ol className="flex flex-wrap items-center gap-2">
-        {steps.map((step, i) => {
-          const state = i < current ? "done" : i === current ? "active" : "todo";
-          return (
-            <motion.li
-              key={step}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: state === "todo" ? 0.45 : 1, scale: 1 }}
-              transition={{ delay: i * 0.06, type: "spring", stiffness: 500, damping: 26 }}
-              className={cn(
-                "relative flex items-center gap-1.5 overflow-hidden rounded-full border-2 border-ink px-3 py-1 text-xs font-semibold",
-                state === "todo" ? "border-dashed bg-transparent text-muted" : cn(colors[i], "text-onpastel"),
-                state === "active" && "shadow-[2px_2px_0_0_rgb(var(--shadow))]",
-              )}
-            >
-              {state === "done" && <Check className="h-3 w-3" strokeWidth={3.5} />}
-              {state === "active" && <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />}
-              {t(`phase.${step as "rewriting" | "searching" | "writing"}`, { scope })}
-              {state === "active" && <span className="absolute inset-y-0 w-1/3 animate-scan bg-white/40" />}
-            </motion.li>
-          );
-        })}
-      </ol>
+    <div className="flex items-center gap-2 text-sm text-muted">
+      <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-accent" />
+      <span>{label}</span>
     </div>
   );
 }
 
-export function Exchange({ question, answer, live, followUp, scopeCount, canRegenerate, onRegenerate, onOpenSource }: Props) {
+export function Exchange({ question, answer, live, scopeCount, canRegenerate, onRegenerate, onOpenSource }: Props) {
   const { t, locale } = useI18n();
   const [hovered, setHovered] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
@@ -102,56 +78,46 @@ export function Exchange({ question, answer, live, followUp, scopeCount, canRege
   const settled = phase === "done" || phase === "stopped";
 
   return (
-    <article className="group/exchange space-y-5 py-6 sm:py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 16, scale: 0.96, rotate: 1 }}
-        animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 420, damping: 26 }}
-        className="flex justify-end"
+    <article className="group/exchange border-t border-line py-7 first:border-t-0 first:pt-2 sm:py-8">
+      <motion.h2
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
+        className="text-balance text-xl font-semibold leading-snug text-fg sm:text-[1.4rem]"
+        dir="auto"
       >
-        <h2
-          className="brut max-w-[88%] rounded-3xl rounded-ee-md bg-lilac px-5 py-3.5 font-display text-xl font-semibold leading-snug text-onpastel sm:text-2xl"
-          dir="auto"
-        >
-          {question.content}
-        </h2>
-      </motion.div>
+        {question.content}
+      </motion.h2>
 
       {answer && (
-        <div>
+        <div className="mt-4">
           <AnimatePresence mode="wait" initial={false}>
             {writing && !answer.content ? (
-              <motion.div key="track" exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}>
-                <PhaseTrack phase={phase!} hasHistory={followUp} scopeCount={scopeCount} />
+              <motion.div key="track" exit={{ opacity: 0, transition: { duration: 0.15 } }}>
+                <PhaseLine phase={phase!} scopeCount={scopeCount} />
               </motion.div>
             ) : (
               <motion.div
                 key="answer"
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                className="brut rounded-3xl rounded-es-md bg-raised p-5 sm:p-6"
+                transition={{ duration: 0.2 }}
               >
-                <div className="mb-3 flex flex-wrap items-center gap-2">
-                  <span className="sticker bg-gold">
-                    <LogoMark className="h-3.5 w-3.5" /> nugget
-                  </span>
-                  {answer.timings && (
-                    <span className="font-mono text-2xs text-subtle">
-                      {t("answer.trace", {
-                        count: sources.length,
-                        retrieval: formatDuration(answer.timings.retrieval_ms),
-                        generation: answer.timings.generation_ms ? formatDuration(answer.timings.generation_ms) : "…",
-                      })}
-                    </span>
-                  )}
-                </div>
-                {answer.searchQuery && answer.searchQuery !== question.content && (
-                  <p className="mb-3 truncate font-mono text-2xs text-subtle">↳ {t("answer.searchedFor", { query: answer.searchQuery })}</p>
+                {answer.timings && (
+                  <p className="mb-2 font-mono text-2xs text-subtle">
+                    {t("answer.trace", {
+                      count: sources.length,
+                      retrieval: formatDuration(answer.timings.retrieval_ms),
+                      generation: answer.timings.generation_ms ? formatDuration(answer.timings.generation_ms) : "…",
+                    })}
+                    {answer.searchQuery && answer.searchQuery !== question.content && (
+                      <> · {t("answer.searchedFor", { query: answer.searchQuery })}</>
+                    )}
+                  </p>
                 )}
 
                 {answer.sources && sources.length === 0 && answer.content && (
-                  <p className="mb-3 rounded-xl border-2 border-dashed border-ink/40 px-3 py-2 text-xs text-muted">{t("answer.noSources")}</p>
+                  <p className="mb-3 rounded-lg border border-dashed border-line px-3 py-2 text-xs text-muted">{t("answer.noSources")}</p>
                 )}
 
                 {answer.content && (
@@ -161,25 +127,30 @@ export function Exchange({ question, answer, live, followUp, scopeCount, canRege
                 )}
 
                 {phase === "error" && (
-                  <div className="mt-2 flex flex-wrap items-center gap-3 rounded-2xl border-2 border-ink bg-bubble px-3 py-2.5 text-sm font-medium text-onpastel">
+                  <div className="mt-2 flex flex-wrap items-center gap-3 rounded-lg border border-danger/25 bg-danger/5 px-3 py-2.5 text-sm text-danger">
                     <span className="min-w-0 flex-1">{answer.error || t("error.generic")}</span>
                     {canRegenerate && (
-                      <button type="button" onClick={onRegenerate} className="btn brut-sm press bg-raised px-2.5 py-1 text-fg">
+                      <button type="button" onClick={onRegenerate} className="btn-outline px-2.5 py-1 text-xs">
                         <RotateCcw className="h-3.5 w-3.5" /> {t("answer.retry")}
                       </button>
                     )}
                   </div>
                 )}
-                {phase === "stopped" && <p className="sticker mt-3 bg-sunken">■ {t("phase.stopped")}</p>}
+                {phase === "stopped" && <p className="mt-2 text-xs text-subtle">{t("phase.stopped")}</p>}
 
                 {settled && answer.content && (
-                  <div className="mt-4 flex items-center gap-2 border-t-2 border-dashed border-ink/15 pt-3">
-                    <button type="button" onClick={copy} className="btn brut-sm press bg-raised px-2.5 py-1 text-xs">
-                      {copied ? <Check className="h-3.5 w-3.5 text-ok" strokeWidth={3} /> : <Copy className="h-3.5 w-3.5" />}
+                  <div
+                    className={cn(
+                      "mt-4 flex items-center gap-1 border-t border-line pt-3 opacity-0 transition-opacity",
+                      "sm:group-hover/exchange:opacity-100 sm:focus-within:opacity-100 max-sm:opacity-100",
+                    )}
+                  >
+                    <button type="button" onClick={copy} className="btn-ghost h-7 px-2 text-xs">
+                      {copied ? <Check className="h-3.5 w-3.5 text-ok" /> : <Copy className="h-3.5 w-3.5" />}
                       {copied ? t("answer.copied") : t("answer.copy")}
                     </button>
                     {canRegenerate && (
-                      <button type="button" onClick={onRegenerate} className="btn brut-sm press bg-raised px-2.5 py-1 text-xs">
+                      <button type="button" onClick={onRegenerate} className="btn-ghost h-7 px-2 text-xs">
                         <RotateCcw className="h-3.5 w-3.5" /> {t("answer.regenerate")}
                       </button>
                     )}
@@ -194,8 +165,7 @@ export function Exchange({ question, answer, live, followUp, scopeCount, canRege
 
           {sources.length > 0 && (
             <section className="mt-6">
-              <h3 className="eyebrow mb-3 flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full border-2 border-ink bg-accent" />
+              <h3 className="eyebrow mb-3">
                 {t("answer.sources")} · {sources.length}
               </h3>
               <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-3 pt-1 scrollbar-none sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 xl:grid-cols-3">

@@ -1,30 +1,21 @@
 "use client";
 
-import { Monitor, Moon, Sun } from "lucide-react";
-import { useEffect } from "react";
+import { Moon, Sun } from "lucide-react";
+import { useEffect, useLayoutEffect, useSyncExternalStore } from "react";
 import { useI18n } from "@/lib/i18n";
-import { usePersistentState } from "@/lib/storage";
+import { getTheme, hydrateTheme, setTheme, subscribeTheme } from "@/lib/theme";
 
-type Theme = "system" | "light" | "dark";
-const ORDER: Theme[] = ["system", "light", "dark"];
-const ICONS = { system: Monitor, light: Sun, dark: Moon };
+const serverTheme = () => "light" as const;
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export function ThemeToggle() {
   const { t } = useI18n();
-  const [theme, setTheme] = usePersistentState<Theme>("theme", "light");
+  const theme = useSyncExternalStore(subscribeTheme, getTheme, serverTheme);
 
-  useEffect(() => {
-    const media = matchMedia("(prefers-color-scheme: dark)");
-    const apply = () => {
-      document.documentElement.dataset.theme =
-        theme === "system" ? (media.matches ? "dark" : "light") : theme;
-    };
-    apply();
-    media.addEventListener("change", apply);
-    return () => media.removeEventListener("change", apply);
-  }, [theme]);
+  useIsoLayoutEffect(() => {
+    hydrateTheme();
+  }, []);
 
-  const Icon = ICONS[theme];
   const label = t(`theme.${theme}`);
   return (
     <button
@@ -32,9 +23,10 @@ export function ThemeToggle() {
       className="icon-btn h-8 w-8 bg-lilac text-onpastel"
       title={label}
       aria-label={label}
-      onClick={() => setTheme(ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length])}
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
-      <Icon className="h-4 w-4" strokeWidth={2.5} />
+      <Sun className="h-4 w-4 dark:hidden" strokeWidth={2.5} />
+      <Moon className="hidden h-4 w-4 dark:block" strokeWidth={2.5} />
     </button>
   );
 }

@@ -42,7 +42,7 @@ const fr: Translations = {
   "empty.title2": "Trouvez la pépite.",
   "empty.body": "Nugget lit vos fichiers, retrouve les passages qui comptent et répond avec des citations vérifiables, dans la langue de votre question.",
   "empty.dropTitle": "Déposez des fichiers pour commencer",
-  "empty.dropBody": "Les embeddings sont calculés sur votre machine. Rien n’est indexé dans le cloud.",
+  "empty.dropBody": "Indexé automatiquement, avec des réponses qu’on peut retracer jusqu’au passage source.",
   "empty.suggestions": "Pour commencer",
   "suggest.summary": "Résume {name} en cinq points",
   "suggest.takeaways": "Quels sont les points clés de mes documents ?",
@@ -91,7 +91,7 @@ const fr: Translations = {
   "paste.cancel": "Annuler",
 
   "drop.title": "Déposez pour ajouter à la bibliothèque",
-  "drop.body": "Les fichiers sont découpés, vectorisés et indexés sur votre machine.",
+  "drop.body": "Les fichiers sont analysés, découpés et indexés automatiquement.",
 
   "toast.indexed": "{name} indexé",
   "toast.duplicate": "{name} est déjà dans votre bibliothèque",

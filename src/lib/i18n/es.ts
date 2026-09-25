@@ -42,7 +42,7 @@ const es: Translations = {
   "empty.title2": "Encuentra la pepita.",
   "empty.body": "Nugget lee tus archivos, encuentra los fragmentos que importan y responde con citas verificables, en el idioma en que preguntes.",
   "empty.dropTitle": "Suelta archivos para empezar",
-  "empty.dropBody": "Los embeddings se calculan en tu equipo. Nada se indexa en la nube.",
+  "empty.dropBody": "Indexado automáticamente; cada respuesta se puede rastrear hasta el pasaje de origen.",
   "empty.suggestions": "Para empezar",
   "suggest.summary": "Resume {name} en cinco puntos",
   "suggest.takeaways": "¿Cuáles son las ideas clave de mis documentos?",
@@ -91,7 +91,7 @@ const es: Translations = {
   "paste.cancel": "Cancelar",
 
   "drop.title": "Suelta para añadir a tu biblioteca",
-  "drop.body": "Los archivos se dividen, vectorizan e indexan en tu equipo.",
+  "drop.body": "Los archivos se analizan, dividen e indexan automáticamente.",
 
   "toast.indexed": "{name} indexado",
   "toast.duplicate": "{name} ya está en tu biblioteca",

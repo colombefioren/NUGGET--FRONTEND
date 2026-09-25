@@ -42,7 +42,7 @@ const de: Translations = {
   "empty.title2": "Finde das Goldstück.",
   "empty.body": "Nugget liest deine Dateien, findet die entscheidenden Stellen und antwortet mit überprüfbaren Quellenangaben – in der Sprache deiner Frage.",
   "empty.dropTitle": "Dateien ablegen, um zu beginnen",
-  "empty.dropBody": "Embeddings werden auf deinem Rechner berechnet. Nichts wird in der Cloud indexiert.",
+  "empty.dropBody": "Automatisch indexiert – jede Antwort lässt sich bis zur Quellstelle zurückverfolgen.",
   "empty.suggestions": "Zum Einstieg",
   "suggest.summary": "Fasse {name} in fünf Stichpunkten zusammen",
   "suggest.takeaways": "Was sind die wichtigsten Erkenntnisse aus meinen Dokumenten?",
@@ -91,7 +91,7 @@ const de: Translations = {
   "paste.cancel": "Abbrechen",
 
   "drop.title": "Ablegen, um zur Bibliothek hinzuzufügen",
-  "drop.body": "Dateien werden auf deinem Rechner zerlegt, eingebettet und indexiert.",
+  "drop.body": "Dateien werden automatisch analysiert, zerlegt und indexiert.",
 
   "toast.indexed": "{name} indexiert",
   "toast.duplicate": "{name} ist bereits in deiner Bibliothek",

@@ -95,7 +95,7 @@ function DocRow({ doc, checked, onToggle, onOpen, onDelete }: { doc: LibraryDoc;
 export function Sidebar({ library, conversations, tab, onTab, onOpenDoc, onPaste, onExport, onNavigate, footerExtra }: Props) {
   const { t, locale } = useI18n();
   const fileRef = useRef<HTMLInputElement>(null);
-  const { docs, pending, selected, online, health } = library;
+  const { docs, pending, selected, online } = library;
   const selectedSet = new Set(selected);
 
   return (
@@ -104,7 +104,7 @@ export function Sidebar({ library, conversations, tab, onTab, onOpenDoc, onPaste
         <Logo />
         <button
           type="button"
-          className="icon-btn"
+          className="btn-solid h-9 w-9 rounded-lg"
           onClick={() => {
             conversations.newThread();
             onNavigate();
@@ -254,8 +254,8 @@ export function Sidebar({ library, conversations, tab, onTab, onOpenDoc, onPaste
           {online && <span className="absolute inset-0 animate-ping rounded-full bg-ok/50 [animation-duration:2.4s]" />}
           <span className={cn("relative h-2 w-2 rounded-full", online === null ? "bg-subtle" : online ? "bg-ok" : "bg-danger")} />
         </span>
-        <span className="min-w-0 flex-1 truncate font-mono text-2xs text-subtle" title={health?.model}>
-          {online === false ? t("status.offline") : health ? health.model.split("/").pop() : "…"}
+        <span className="min-w-0 flex-1 truncate font-mono text-2xs text-subtle">
+          {online === false ? t("status.offline") : online ? t("status.online") : "…"}
         </span>
         {footerExtra}
         <ThemeToggle />

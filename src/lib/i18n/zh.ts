@@ -42,7 +42,7 @@ const zh: Translations = {
   "empty.title2": "淘出真金。",
   "empty.body": "Nugget 阅读你的文件，找出关键段落，并附上可核对的引用来回答，而且用你提问的语言。",
   "empty.dropTitle": "拖入文件即可开始",
-  "empty.dropBody": "向量在你的电脑上计算，不会在云端建立索引。",
+  "empty.dropBody": "自动建立索引，每个回答都可追溯到原始段落。",
   "empty.suggestions": "从这里开始",
   "suggest.summary": "用五个要点总结《{name}》",
   "suggest.takeaways": "我的文档中最重要的结论是什么？",
@@ -91,7 +91,7 @@ const zh: Translations = {
   "paste.cancel": "取消",
 
   "drop.title": "松开即可添加到资料库",
-  "drop.body": "文件会在你的电脑上被切分、向量化并建立索引。",
+  "drop.body": "文件会被自动解析、切分并建立索引。",
 
   "toast.indexed": "已添加 {name}",
   "toast.duplicate": "{name} 已在资料库中",

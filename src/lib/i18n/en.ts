@@ -40,7 +40,7 @@ const en = {
   "empty.title2": "Get the nugget.",
   "empty.body": "Nugget reads your files, finds the passages that matter, and answers with citations you can check, in whatever language you ask.",
   "empty.dropTitle": "Drop files to begin",
-  "empty.dropBody": "Embeddings are computed on your machine. Nothing is indexed in the cloud.",
+  "empty.dropBody": "Indexed automatically, with every answer traceable back to the source passage.",
   "empty.suggestions": "Start with",
   "suggest.summary": "Summarize {name} in five bullet points",
   "suggest.takeaways": "What are the key takeaways across my documents?",
@@ -89,7 +89,7 @@ const en = {
   "paste.cancel": "Cancel",
 
   "drop.title": "Drop to add to your library",
-  "drop.body": "Files are chunked, embedded and indexed on your machine.",
+  "drop.body": "Files are parsed, chunked and indexed automatically.",
 
   "toast.indexed": "Indexed {name}",
   "toast.duplicate": "{name} is already in your library",

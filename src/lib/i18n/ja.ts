@@ -42,7 +42,7 @@ const ja: Translations = {
   "empty.title2": "金の粒を見つけよう。",
   "empty.body": "Nugget はファイルを読み、重要な箇所を見つけ、確認できる出典付きで回答します。質問した言語のままで。",
   "empty.dropTitle": "ファイルをドロップして開始",
-  "empty.dropBody": "埋め込みはお使いのマシン上で計算され、クラウドでインデックス化されることはありません。",
+  "empty.dropBody": "自動でインデックス化され、回答はすべて元の段落までたどれます。",
   "empty.suggestions": "まずはこちら",
   "suggest.summary": "{name} を5つの要点にまとめて",
   "suggest.takeaways": "ドキュメント全体の要点は？",
@@ -91,7 +91,7 @@ const ja: Translations = {
   "paste.cancel": "キャンセル",
 
   "drop.title": "ドロップしてライブラリに追加",
-  "drop.body": "ファイルはお使いのマシン上で分割・ベクトル化・インデックス化されます。",
+  "drop.body": "ファイルは自動で解析・分割・インデックス化されます。",
 
   "toast.indexed": "{name} を追加しました",
   "toast.duplicate": "{name} はすでにライブラリにあります",

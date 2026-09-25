@@ -29,14 +29,14 @@ export function LanguageMenu() {
     <div ref={root} className="relative">
       <button
         type="button"
-        className="btn-ghost h-8 px-2 font-mono text-2xs uppercase"
+        className="btn brut-sm press h-8 bg-mint px-2 font-mono text-2xs uppercase text-onpastel"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t("language.label")}
         title={t("language.label")}
         onClick={() => setOpen((o) => !o)}
       >
-        <Languages className="h-3.5 w-3.5" />
+        <Languages className="h-3.5 w-3.5" strokeWidth={2.5} />
         {locale}
       </button>
       <AnimatePresence>
@@ -44,11 +44,11 @@ export function LanguageMenu() {
           <motion.ul
             role="listbox"
             aria-label={t("language.label")}
-            initial={{ opacity: 0, y: 6, scale: 0.98 }}
+            initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98, transition: { duration: 0.12 } }}
             transition={{ type: "spring", stiffness: 500, damping: 34 }}
-            className="absolute bottom-full end-0 z-50 mb-2 w-48 origin-bottom overflow-hidden rounded-xl border border-line bg-raised p-1 shadow-pop"
+            className="brut absolute bottom-full end-0 z-50 mb-3 w-52 origin-bottom-right overflow-hidden rounded-2xl bg-raised p-1.5"
           >
             {LOCALES.map((l) => (
               <li key={l.code}>
@@ -62,13 +62,13 @@ export function LanguageMenu() {
                     setOpen(false);
                   }}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-lg px-2.5 py-1.5 text-start text-sm transition-colors hover:bg-sunken",
-                    l.code === locale ? "text-fg" : "text-muted",
+                    "flex w-full items-center gap-3 rounded-xl px-2.5 py-1.5 text-start text-sm font-medium transition-colors hover:bg-butter hover:text-onpastel",
+                    l.code === locale ? "bg-bubble text-onpastel" : "text-muted",
                   )}
                 >
-                  <span className="w-5 font-mono text-2xs uppercase text-subtle">{l.code}</span>
+                  <span className="w-5 font-mono text-2xs font-bold uppercase opacity-60">{l.code}</span>
                   <span className="flex-1">{l.label}</span>
-                  {l.code === locale && <Check className="h-3.5 w-3.5 text-accent" />}
+                  {l.code === locale && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
                 </button>
               </li>
             ))}

@@ -29,12 +29,12 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="icon-btn"
+      className="icon-btn h-8 w-8 bg-lilac text-onpastel"
       title={label}
       aria-label={label}
       onClick={() => setTheme(ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length])}
     >
-      <Icon className="h-4 w-4" />
+      <Icon className="h-4 w-4" strokeWidth={2.5} />
     </button>
   );
 }

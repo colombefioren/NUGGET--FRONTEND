@@ -2,31 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Pastel neon brutalism: cream paper, ink outlines, hard offset shadows and candy stickers.
+ * In dark mode the outlines turn cream and the shadows turn into neon.
+ */
 :root {
-  --bg: 246 243 237;
-  --raised: 253 251 247;
-  --sunken: 237 233 224;
-  --fg: 28 26 23;
-  --muted: 98 93 84;
-  --subtle: 146 140 129;
-  --line: 222 215 202;
-  --accent: 200 72 30;
-  --ok: 46 120 82;
-  --danger: 186 44 38;
+  --bg: 255 248 236;
+  --raised: 255 255 255;
+  --sunken: 255 239 206;
+  --fg: 24 20 30;
+  --muted: 86 78 96;
+  --subtle: 138 128 146;
+  --line: 236 222 196;
+  --ink: 24 20 30;
+  --shadow: 24 20 30;
+  --accent: 255 72 160;
+  --gold: 255 191 46;
+  --butter: 255 226 130;
+  --bubble: 255 186 224;
+  --mint: 166 240 206;
+  --lilac: 204 186 255;
+  --sky: 166 220 255;
+  --lime: 204 255 84;
+  --on-pastel: 24 20 30;
+  --ok: 30 150 88;
+  --danger: 226 44 76;
+  --glow: 0 0 0 0 transparent;
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: 18 17 15;
-  --raised: 27 26 23;
-  --sunken: 13 12 11;
-  --fg: 236 231 221;
-  --muted: 168 161 148;
-  --subtle: 112 107 98;
-  --line: 48 46 41;
-  --accent: 240 122 70;
-  --ok: 116 196 146;
-  --danger: 240 104 92;
+  --bg: 20 16 30;
+  --raised: 33 27 48;
+  --sunken: 27 22 40;
+  --fg: 255 244 232;
+  --muted: 204 192 218;
+  --subtle: 142 130 162;
+  --line: 58 48 80;
+  --ink: 255 244 232;
+  --shadow: 255 72 160;
+  --accent: 255 104 184;
+  --gold: 255 200 72;
+  --ok: 110 230 160;
+  --danger: 255 110 130;
+  --glow: 0 0 22px -2px rgb(255 72 160 / 0.55);
   color-scheme: dark;
 }
 
@@ -38,30 +57,21 @@
 
   body {
     @apply bg-bg text-fg antialiased;
-    font-feature-settings: "ss01", "cv11";
+    background-image: radial-gradient(rgb(var(--ink) / 0.09) 1.2px, transparent 1.2px);
+    background-size: 22px 22px;
   }
 
-  /* Paper grain: a barely-there texture that keeps flat surfaces from feeling synthetic. */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  [data-theme="dark"] body::before {
-    opacity: 0.06;
+  [data-theme="dark"] body {
+    background-image: radial-gradient(rgb(204 186 255 / 0.12) 1.2px, transparent 1.2px);
   }
 
   ::selection {
-    background: rgb(var(--accent) / 0.22);
+    background: rgb(var(--bubble));
+    color: rgb(var(--on-pastel));
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-accent/60 ring-offset-2 ring-offset-bg;
+    @apply outline-none ring-[3px] ring-accent ring-offset-2 ring-offset-bg;
   }
 
   /* Tracking breaks Arabic's joined letterforms and looks wrong in CJK. */
@@ -71,28 +81,61 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--line)) transparent;
+    scrollbar-color: rgb(var(--ink) / 0.35) transparent;
   }
 }
 
 @layer components {
+  /* The brutalist building block: ink outline + hard offset shadow (neon in dark mode). */
+  .brut {
+    @apply border-2 border-ink;
+    box-shadow: 4px 4px 0 0 rgb(var(--shadow)), var(--glow);
+  }
+  .brut-sm {
+    @apply border-2 border-ink;
+    box-shadow: 2px 2px 0 0 rgb(var(--shadow));
+  }
+  .press {
+    transition:
+      transform 0.14s cubic-bezier(0.3, 0.7, 0.4, 1.4),
+      box-shadow 0.14s ease,
+      background-color 0.15s ease;
+  }
+  .press:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 rgb(var(--shadow)), var(--glow);
+  }
+  .press:active:not(:disabled) {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 0 rgb(var(--shadow));
+  }
+  .brut-sm.press:hover:not(:disabled) {
+    box-shadow: 4px 4px 0 0 rgb(var(--shadow));
+  }
+
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-[background-color,color,transform,opacity] duration-150 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold disabled:pointer-events-none disabled:opacity-40;
   }
   .btn-ghost {
-    @apply btn text-muted hover:bg-sunken hover:text-fg;
+    @apply btn text-muted transition-colors hover:bg-ink/5 hover:text-fg;
   }
   .btn-solid {
-    @apply btn bg-fg text-bg hover:bg-fg/85;
+    @apply btn brut-sm press bg-gold text-onpastel;
   }
   .icon-btn {
+    @apply btn brut-sm press h-9 w-9 shrink-0 bg-raised text-fg;
+  }
+  .icon-btn-quiet {
     @apply btn-ghost h-8 w-8 shrink-0;
   }
   .eyebrow {
-    @apply font-mono text-2xs uppercase tracking-[0.14em] text-subtle;
+    @apply font-mono text-2xs font-bold uppercase tracking-[0.12em] text-muted;
   }
-  .hairline {
-    @apply border-line;
+  .sticker {
+    @apply inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-2xs font-bold uppercase tracking-wider text-onpastel;
+  }
+  .field {
+    @apply w-full rounded-xl border-2 border-ink bg-raised px-3 py-2 text-sm placeholder:text-subtle focus:outline-none focus:ring-[3px] focus:ring-accent/40;
   }
 }
 
@@ -100,12 +143,38 @@
   .streaming > :last-child::after {
     content: "";
     display: inline-block;
-    width: 0.55ch;
+    width: 0.6ch;
     height: 1.05em;
-    margin-inline-start: 2px;
+    margin-inline-start: 3px;
     vertical-align: -0.15em;
+    border-radius: 2px;
     background: rgb(var(--accent));
-    animation: blink 1s steps(1) infinite;
+    box-shadow: 0 0 10px rgb(var(--accent) / 0.8);
+    animation: blink 0.9s steps(1) infinite;
+  }
+  .marker {
+    background-image: linear-gradient(transparent 58%, rgb(var(--butter) / 0.9) 58%);
+  }
+  [data-theme="dark"] .marker {
+    background-image: linear-gradient(transparent 62%, rgb(255 72 160 / 0.45) 62%);
+  }
+  .neon-text {
+    text-shadow: none;
+  }
+  [data-theme="dark"] .neon-text {
+    text-shadow:
+      0 0 12px rgb(var(--accent) / 0.7),
+      0 0 2px rgb(var(--accent));
+  }
+  /* Keeps prose readable on pastel fills, which stay light in dark mode. */
+  .on-pastel .prose {
+    --tw-prose-body: rgb(var(--on-pastel) / 0.9);
+    --tw-prose-headings: rgb(var(--on-pastel));
+    --tw-prose-bold: rgb(var(--on-pastel));
+    --tw-prose-bullets: rgb(var(--on-pastel));
+    --tw-prose-counters: rgb(var(--on-pastel));
+    --tw-prose-td-borders: rgb(var(--on-pastel) / 0.25);
+    --tw-prose-th-borders: rgb(var(--on-pastel));
   }
   .scrollbar-none {
     scrollbar-width: none;

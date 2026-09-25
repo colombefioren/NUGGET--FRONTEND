@@ -153,14 +153,14 @@ function Nugget() {
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
-      <aside className="hidden w-[18.5rem] shrink-0 border-e border-line bg-bg lg:block">{sidebar}</aside>
+      <aside className="hidden w-[19rem] shrink-0 border-e-2 border-ink bg-sunken lg:block">{sidebar}</aside>
 
       <AnimatePresence>
         {drawer && (
           <>
-            <motion.div className="fixed inset-0 z-40 bg-fg/25 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDrawer(false)} />
+            <motion.div className="fixed inset-0 z-40 bg-ink/30 backdrop-blur-[1px] dark:bg-black/50 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDrawer(false)} />
             <motion.aside
-              className="fixed inset-y-0 start-0 z-50 w-[min(20rem,88vw)] border-e border-line bg-bg shadow-pop lg:hidden"
+              className="fixed inset-y-0 start-0 z-50 w-[min(20rem,88vw)] border-e-2 border-ink bg-sunken lg:hidden"
               initial={{ x: offscreen }}
               animate={{ x: 0 }}
               exit={{ x: offscreen }}
@@ -173,24 +173,24 @@ function Nugget() {
       </AnimatePresence>
 
       <main className="relative flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-line/70 px-3 sm:px-5 lg:border-transparent">
-          <button type="button" className="icon-btn lg:hidden" onClick={() => setDrawer(true)} aria-label={t("app.menu")}>
-            <Menu className="h-4 w-4" />
+        <header className="flex h-16 shrink-0 items-center gap-2.5 border-b-2 border-ink px-3 sm:px-5 lg:border-transparent">
+          <button type="button" className="icon-btn bg-gold text-onpastel lg:hidden" onClick={() => setDrawer(true)} aria-label={t("app.menu")}>
+            <Menu className="h-4 w-4" strokeWidth={2.5} />
           </button>
           <span className="lg:hidden">
-            <LogoMark />
+            <LogoMark className="h-8 w-8" />
           </span>
-          <p className="min-w-0 flex-1 truncate text-sm text-muted" dir="auto">
+          <p className="min-w-0 flex-1 truncate font-display text-base font-semibold text-muted" dir="auto">
             {active?.title}
           </p>
           {active && (
             <button type="button" className="icon-btn" onClick={() => exportThread(active)} title={t("history.export")} aria-label={t("history.export")}>
-              <Download className="h-4 w-4" />
+              <Download className="h-4 w-4" strokeWidth={2.5} />
             </button>
           )}
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn bg-gold text-onpastel"
             onClick={() => {
               conversations.newThread();
               inputRef.current?.focus();
@@ -198,17 +198,17 @@ function Nugget() {
             title={`${t("app.newChat")} (Ctrl K)`}
             aria-label={t("app.newChat")}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4" strokeWidth={3} />
           </button>
         </header>
 
         {library.online === false && (
-          <div className="border-b border-danger/20 bg-danger/5 px-4 py-2 text-center text-xs text-danger">
-            {t("status.offlineBody")} <code className="rounded bg-danger/10 px-1 font-mono">uv run uvicorn app.main:app</code>
+          <div className="border-b-2 border-ink bg-bubble px-4 py-2 text-center text-xs font-semibold text-onpastel">
+            {t("status.offlineBody")} <code className="rounded-md border-2 border-onpastel bg-white px-1 font-mono">uv run uvicorn app.main:app</code>
           </div>
         )}
         {library.health && !library.health.llm_configured && (
-          <div className="border-b border-line bg-sunken px-4 py-2 text-center text-xs text-muted">{t("status.noKey")}</div>
+          <div className="border-b-2 border-ink bg-butter px-4 py-2 text-center text-xs font-semibold text-onpastel">{t("status.noKey")}</div>
         )}
 
         <div
@@ -228,7 +228,7 @@ function Nugget() {
               loadingSample={loadingSample}
             />
           ) : (
-            <div className="mx-auto w-full max-w-3xl divide-y divide-line px-4 sm:px-8">
+            <div className="mx-auto w-full max-w-3xl px-4 sm:px-8">
               {exchanges.map(({ question, answer }, i) => {
                 const last = i === exchanges.length - 1;
                 return (
@@ -252,7 +252,8 @@ function Nugget() {
 
         <div className="relative shrink-0 px-3 pb-safe sm:px-8">
           <div className="pointer-events-none absolute inset-x-0 -top-8 h-8 bg-gradient-to-t from-bg to-transparent" />
-          <div className="mx-auto w-full max-w-3xl sm:pb-2">
+
+          <div className="mx-auto w-full max-w-3xl sm:pb-3">
             <Composer
               value={draft}
               onChange={setDraft}

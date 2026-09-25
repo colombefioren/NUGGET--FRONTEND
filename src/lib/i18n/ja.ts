@@ -38,8 +38,8 @@ const ja: Translations = {
   "history.untitled": "無題",
 
   "empty.eyebrow": "検索拡張生成 · 多言語対応",
-  "empty.title1": "ドキュメントに、",
-  "empty.title2": "何でも聞こう。",
+  "empty.title1": "ドキュメントに聞いて、",
+  "empty.title2": "金の粒を見つけよう。",
   "empty.body": "Nugget はファイルを読み、重要な箇所を見つけ、確認できる出典付きで回答します。質問した言語のままで。",
   "empty.dropTitle": "ファイルをドロップして開始",
   "empty.dropBody": "埋め込みはお使いのマシン上で計算され、クラウドでインデックス化されることはありません。",

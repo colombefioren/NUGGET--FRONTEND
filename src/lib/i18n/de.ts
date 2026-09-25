@@ -38,8 +38,8 @@ const de: Translations = {
   "history.untitled": "Ohne Titel",
 
   "empty.eyebrow": "Retrieval-augmentiert · mehrsprachig",
-  "empty.title1": "Frag deine Dokumente",
-  "empty.title2": "alles.",
+  "empty.title1": "Frag deine Dokumente.",
+  "empty.title2": "Finde das Goldstück.",
   "empty.body": "Nugget liest deine Dateien, findet die entscheidenden Stellen und antwortet mit überprüfbaren Quellenangaben – in der Sprache deiner Frage.",
   "empty.dropTitle": "Dateien ablegen, um zu beginnen",
   "empty.dropBody": "Embeddings werden auf deinem Rechner berechnet. Nichts wird in der Cloud indexiert.",

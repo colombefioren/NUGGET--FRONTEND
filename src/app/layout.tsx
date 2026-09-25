@@ -1,18 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Fredoka, Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 
-const sans = Geist({ subsets: ["latin"], variable: "--font-sans" });
-const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
-const serif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-});
+const sans = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans" });
+const display = Fredoka({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-display" });
+const mono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  title: "Nugget — Ask your documents",
+  title: "Nugget — ask your docs, get the nugget",
   description:
     "A multilingual retrieval-augmented answer engine. Drop in your files, ask in any language, get cited answers.",
 };
@@ -22,8 +17,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f3ed" },
-    { media: "(prefers-color-scheme: dark)", color: "#12110f" },
+    { media: "(prefers-color-scheme: light)", color: "#fff8ec" },
+    { media: "(prefers-color-scheme: dark)", color: "#14101e" },
   ],
 };
 
@@ -35,7 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${sans.variable} ${mono.variable} ${serif.variable}`}
+      className={`${sans.variable} ${display.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />

@@ -12,7 +12,7 @@ export function Logo() {
   return (
     <span className="flex items-center gap-2 text-fg">
       <LogoMark />
-      <span className="font-serif text-[1.6rem] leading-none tracking-tight">Lumen</span>
+      <span className="font-serif text-[1.6rem] leading-none tracking-tight">Nugget</span>
     </span>
   );
 }

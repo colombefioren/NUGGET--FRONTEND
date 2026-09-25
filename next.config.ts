@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const apiUrl = process.env.LUMEN_API_URL ?? "http://localhost:8000";
+const apiUrl = process.env.NUGGET_API_URL ?? "http://localhost:8000";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

@@ -237,6 +237,7 @@ function Nugget() {
                     question={question}
                     answer={answer}
                     live={busy && last}
+                    followUp={i > 0}
                     scopeCount={docIds === null ? null : docIds.length}
                     canRegenerate={last && !busy}
                     onRegenerate={() => answer && conversations.regenerate(answer.id, docIds)}

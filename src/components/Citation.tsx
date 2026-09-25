@@ -33,10 +33,8 @@ export function Citation({ n, source, active, onHover, onOpen }: Props) {
         onClick={onOpen}
         aria-label={`${source.source}${source.page ? `, p. ${source.page}` : ""}`}
         className={cn(
-          "mx-px inline-grid h-[1.15rem] min-w-[1.15rem] -translate-y-[0.1em] place-items-center rounded-md border border-fg/70 px-1 font-mono text-[0.65rem] font-bold tabular-nums no-underline transition-all",
-          active
-            ? "-translate-y-[0.25em] border-fg bg-accent text-on-accent shadow-[2px_2px_0_0_rgb(var(--shadow))]"
-            : "bg-accent-soft text-accent hover:bg-accent hover:text-on-accent",
+          "mx-[2px] inline-grid h-[1.2rem] min-w-[1.2rem] -translate-y-[0.12em] place-items-center rounded-md border-2 border-ink px-1 font-mono text-[0.62rem] font-bold tabular-nums text-onpastel no-underline transition-all duration-150",
+          active ? "-translate-y-[0.3em] bg-accent text-white shadow-[2px_2px_0_0_rgb(var(--ink))]" : "bg-gold hover:bg-accent hover:text-white",
         )}
       >
         {n}
@@ -44,13 +42,13 @@ export function Citation({ n, source, active, onHover, onOpen }: Props) {
       <AnimatePresence>
         {peek && (
           <motion.span
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 8, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.1 } }}
-            transition={{ duration: 0.15 }}
-            className="pointer-events-none absolute bottom-full start-1/2 z-30 mb-2 hidden w-72 -translate-x-1/2 rounded-xl border border-line bg-raised p-3 text-start shadow-md rtl:translate-x-1/2 md:block"
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="brut pointer-events-none absolute bottom-full start-1/2 z-30 mb-2.5 hidden w-72 -translate-x-1/2 rounded-2xl bg-raised p-3 text-start rtl:translate-x-1/2 md:block"
           >
-            <span className="mb-1 block truncate text-xs font-medium text-fg">
+            <span className="sticker mb-2 max-w-full truncate bg-butter">
               {source.source}
               {source.page ? ` · p. ${source.page}` : ""}
             </span>

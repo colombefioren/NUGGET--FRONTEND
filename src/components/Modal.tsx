@@ -36,11 +36,11 @@ export function Modal({
             role="dialog"
             aria-modal
             aria-label={label}
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, transition: { duration: 0.15 } }}
-            transition={{ duration: 0.22, ease: [0.2, 0.7, 0.3, 1] }}
-            className="brut relative w-full rounded-t-2xl bg-raised p-5 pb-safe sm:max-w-lg sm:rounded-2xl sm:pb-5"
+            initial={{ opacity: 0, y: 40, scale: 0.96, rotate: -1 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, y: 30, transition: { duration: 0.15 } }}
+            transition={{ type: "spring", stiffness: 420, damping: 28 }}
+            className="brut relative w-full rounded-t-3xl bg-raised p-5 pb-safe sm:max-w-lg sm:rounded-3xl sm:pb-5"
           >
             {children}
           </motion.div>

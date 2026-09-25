@@ -87,3 +87,10 @@ export function trimOverlap(prev: string, next: string) {
   }
   return next;
 }
+
+// Kept to two accents (one for the "you are here" state, one for relevance meters)
+// instead of a different pastel per file type — same bold border-and-shadow language,
+// fewer competing colors on screen at once.
+export const PASTELS = ["bg-gold", "bg-sky"] as const;
+
+export const kindColor = () => "bg-sunken";

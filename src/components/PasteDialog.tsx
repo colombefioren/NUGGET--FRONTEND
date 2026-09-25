@@ -30,8 +30,10 @@ export function PasteDialog({
   return (
     <Modal open={open} onClose={onClose} label={t("paste.title")}>
       <form onSubmit={submit} className="space-y-3">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-fg">
-          <ClipboardPaste className="h-5 w-5 text-accent" />
+        <h2 className="flex items-center gap-2.5 font-display text-2xl font-bold">
+          <span className="grid h-9 w-9 place-items-center rounded-xl border-2 border-ink bg-mint text-onpastel">
+            <ClipboardPaste className="h-4 w-4" strokeWidth={2.5} />
+          </span>
           {t("paste.title")}
         </h2>
         <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("paste.name")} className="field" />

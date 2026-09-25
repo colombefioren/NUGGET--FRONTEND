@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Space_Mono } from "next/font/google";
+import { Fredoka, Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 
 const sans = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans" });
+const display = Fredoka({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-display" });
 const mono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
@@ -16,8 +17,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fcfbf9" },
-    { media: "(prefers-color-scheme: dark)", color: "#141312" },
+    { media: "(prefers-color-scheme: light)", color: "#fff8ec" },
+    { media: "(prefers-color-scheme: dark)", color: "#14101e" },
   ],
 };
 
@@ -27,7 +28,11 @@ const bootScript = `try{var t=localStorage.getItem("nugget:theme");t=t?JSON.pars
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${sans.variable} ${mono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${sans.variable} ${display.variable} ${mono.variable}`}
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>

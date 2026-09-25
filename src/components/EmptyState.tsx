@@ -5,14 +5,16 @@ import { ArrowUpRight, FileUp, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { SAMPLE_TITLE } from "@/lib/sample";
 import type { LibraryDoc } from "@/lib/types";
-import { LogoMark } from "./Logo";
+import { PASTELS, cn } from "@/lib/utils";
+import { LogoMark, Sparkle } from "./Logo";
 
-const rise = {
-  hidden: { opacity: 0, y: 10 },
+const pop = {
+  hidden: { opacity: 0, y: 18, scale: 0.96 },
   show: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: 0.05 * i, duration: 0.3, ease: [0.2, 0.7, 0.3, 1] as const },
+    scale: 1,
+    transition: { delay: 0.06 * i, type: "spring" as const, stiffness: 380, damping: 26 },
   }),
 };
 
@@ -40,66 +42,81 @@ export function EmptyState({ docs, onPick, onBrowse, onSample, loadingSample }: 
 
   return (
     // my-auto instead of justify-center: centered content that outgrows the viewport would be clipped at the top.
-    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-10 sm:px-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-10 sm:px-8">
       <div className="my-auto">
-        <motion.div variants={rise} initial="hidden" animate="show" custom={0} className="mb-5">
-          <LogoMark className="h-10 w-10" />
+        <motion.div variants={pop} initial="hidden" animate="show" custom={0} className="relative mb-6 w-fit">
+          <LogoMark className="h-20 w-20 animate-bob sm:h-24 sm:w-24" />
+          <Sparkle className="absolute -end-5 top-1 h-5 w-5 animate-twinkle text-accent" />
+          <Sparkle className="absolute -start-3 bottom-2 h-3 w-3 animate-twinkle text-lilac [animation-delay:.8s]" />
         </motion.div>
-        <motion.p variants={rise} initial="hidden" animate="show" custom={1} className="eyebrow">
+        <motion.p variants={pop} initial="hidden" animate="show" custom={1} className="sticker w-fit -rotate-2 bg-lime">
           {t("empty.eyebrow")}
         </motion.p>
         <motion.h1
-          variants={rise}
+          variants={pop}
           initial="hidden"
           animate="show"
           custom={2}
-          className="mt-3 text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-fg sm:text-5xl"
+          className="mt-5 text-balance font-display text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl"
         >
-          {t("empty.title1")} <span className="text-accent">{t("empty.title2")}</span>
+          {t("empty.title1")}{" "}
+          <span className="brut mt-2 inline-block -rotate-2 rounded-2xl bg-gold px-3 pb-1 text-onpastel sm:rounded-3xl">
+            {t("empty.title2")}
+          </span>
         </motion.h1>
-        <motion.p variants={rise} initial="hidden" animate="show" custom={3} className="mt-4 max-w-lg text-pretty leading-relaxed text-muted">
+        <motion.p variants={pop} initial="hidden" animate="show" custom={3} className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted">
           {t("empty.body")}
         </motion.p>
 
         {docs.length === 0 ? (
-          <motion.div variants={rise} initial="hidden" animate="show" custom={4} className="mt-8 grid gap-3 sm:grid-cols-2">
+          <motion.div variants={pop} initial="hidden" animate="show" custom={4} className="mt-10 grid gap-4 sm:grid-cols-[1.35fr_1fr]">
             <button
               type="button"
               onClick={onBrowse}
-              className="card group p-5 text-start transition-colors hover:border-accent/40"
+              className="brut press group relative overflow-hidden rounded-3xl bg-mint p-6 text-start text-onpastel"
             >
-              <FileUp className="h-5 w-5 text-accent" strokeWidth={1.75} />
-              <p className="mt-4 text-base font-semibold text-fg">{t("empty.dropTitle")}</p>
-              <p className="mt-1 text-sm text-muted">{t("library.formats")}</p>
-              <p className="mt-3 font-mono text-2xs text-subtle">{t("empty.dropBody")}</p>
+              <span className="grid h-11 w-11 place-items-center rounded-2xl border-2 border-ink bg-white transition-transform group-hover:animate-wiggle">
+                <FileUp className="h-5 w-5" strokeWidth={2.5} />
+              </span>
+              <p className="mt-6 font-display text-2xl font-bold">{t("empty.dropTitle")}</p>
+              <p className="mt-1 text-sm font-medium opacity-80">{t("library.formats")}</p>
+              <p className="mt-4 font-mono text-2xs opacity-70">{t("empty.dropBody")}</p>
             </button>
             <button
               type="button"
               onClick={onSample}
               disabled={loadingSample}
-              className="card group p-5 text-start transition-colors hover:border-accent/40 disabled:opacity-60"
+              className="brut press group rounded-3xl bg-bubble p-6 text-start text-onpastel disabled:opacity-60"
             >
-              <Sparkles className="h-5 w-5 text-accent" strokeWidth={1.75} />
-              <p className="mt-4 text-base font-semibold text-fg">{t("library.sample")}</p>
-              <p className="mt-1 text-sm text-muted">“{SAMPLE_TITLE}”</p>
-              <ArrowUpRight className="mt-3 h-4 w-4 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:-scale-x-100" />
+              <span className="grid h-11 w-11 place-items-center rounded-2xl border-2 border-ink bg-white transition-transform group-hover:animate-wiggle">
+                <Sparkles className="h-5 w-5" strokeWidth={2.5} />
+              </span>
+              <p className="mt-6 font-display text-2xl font-bold">{t("library.sample")}</p>
+              <p className="mt-1 text-sm font-medium opacity-80">“{SAMPLE_TITLE}”</p>
+              <ArrowUpRight className="mt-4 h-5 w-5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" strokeWidth={2.5} />
             </button>
           </motion.div>
         ) : (
-          <motion.div variants={rise} initial="hidden" animate="show" custom={4} className="mt-8">
-            <p className="eyebrow mb-2">{t("empty.suggestions")}</p>
-            <ul className="divide-y divide-line border-y border-line">
+          <motion.div variants={pop} initial="hidden" animate="show" custom={4} className="mt-10">
+            <p className="eyebrow mb-3">{t("empty.suggestions")}</p>
+            <ul className="grid gap-3 sm:grid-cols-2">
               {suggestions.map((s, i) => (
-                <motion.li key={s} variants={rise} initial="hidden" animate="show" custom={5 + i}>
+                <motion.li key={s} variants={pop} initial="hidden" animate="show" custom={5 + i}>
                   <button
                     type="button"
                     onClick={() => onPick(s)}
-                    className="group flex w-full items-center gap-3 py-3.5 text-start text-[0.95rem] text-fg transition-colors hover:text-accent"
+                    className={cn(
+                      "brut-sm press group flex h-full w-full items-start gap-3 rounded-2xl px-4 py-3.5 text-start text-[0.95rem] font-medium text-onpastel",
+                      PASTELS[i % PASTELS.length],
+                    )}
                   >
-                    <span className="min-w-0 flex-1" dir="auto">
+                    <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg border-2 border-ink bg-white font-mono text-2xs font-bold">
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0 flex-1 text-start" dir="auto">
                       {s}
                     </span>
-                    <ArrowUpRight className="h-4 w-4 shrink-0 text-subtle opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100 rtl:-scale-x-100" />
+                    <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100 rtl:-scale-x-100" strokeWidth={2.5} />
                   </button>
                 </motion.li>
               ))}

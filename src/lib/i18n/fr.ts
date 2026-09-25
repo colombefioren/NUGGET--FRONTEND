@@ -38,8 +38,8 @@ const fr: Translations = {
   "history.untitled": "Sans titre",
 
   "empty.eyebrow": "Génération augmentée · multilingue",
-  "empty.title1": "Demandez à vos documents",
-  "empty.title2": "n’importe quoi.",
+  "empty.title1": "Interrogez vos docs.",
+  "empty.title2": "Trouvez la pépite.",
   "empty.body": "Nugget lit vos fichiers, retrouve les passages qui comptent et répond avec des citations vérifiables, dans la langue de votre question.",
   "empty.dropTitle": "Déposez des fichiers pour commencer",
   "empty.dropBody": "Les embeddings sont calculés sur votre machine. Rien n’est indexé dans le cloud.",

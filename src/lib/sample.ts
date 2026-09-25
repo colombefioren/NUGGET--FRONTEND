@@ -1,33 +1,36 @@
-export const SAMPLE_TITLE = "Lighthouses — a short history";
+export const SAMPLE_TITLE = "Gold rushes — a field guide";
 
-export const SAMPLE_TEXT = `# Lighthouses — a short history
+export const SAMPLE_TEXT = `# Gold rushes — a field guide
 
-## Antiquity
+## California, 1848
 
-The Pharos of Alexandria was built in the early third century BC under Ptolemy I and completed under his son Ptolemy II, around 280 BC. Ancient accounts suggest it stood well over 100 metres tall, which would have made it one of the tallest structures in the world for centuries. A fire burned at its summit at night, and some writers describe a mirror that reflected sunlight during the day. It was damaged by a series of earthquakes between the tenth and fourteenth centuries, and by 1480 its stones had been reused to build the Citadel of Qaitbay on the same site. The word "pharos" survives in several languages: "phare" in French, "faro" in Italian and Spanish.
+On 24 January 1848, James W. Marshall found flakes of gold in the tailrace of a sawmill he was building for John Sutter on the American River, at Coloma. The news spread slowly at first, then explosively after President James K. Polk confirmed the discovery in December 1848. Around 300,000 people reached California over the following years; those who arrived in 1849 became known as the "forty-niners". San Francisco grew from roughly 1,000 residents in 1848 to about 25,000 by 1850, and California became a US state in 1850.
 
-The Tower of Hercules in A Coruña, Spain, is the oldest Roman lighthouse still in use. It was built in the late first or early second century AD and heavily restored in the 1790s. It became a UNESCO World Heritage Site in 2009.
+## Victoria, Australia, 1851
 
-## Rock lighthouses
+Gold was found near Ballarat and Bendigo in 1851, and within a decade Victoria was producing a large share of the world's gold. Miners had to buy expensive licences; resentment over them led to the Eureka Stockade rebellion at Ballarat in December 1854, an episode often cited as a turning point for democracy in Australia.
 
-Building on wave-swept rocks was the great engineering challenge of the eighteenth century. The first Eddystone lighthouse, off Plymouth, was a wooden tower designed by Henry Winstanley and lit in 1698. It was destroyed in the Great Storm of 1703, with Winstanley inside. John Smeaton's granite tower of 1759 used dovetailed stone blocks and a hydraulic lime that set under water; its design became the template for rock lighthouses for more than a century. Smeaton's tower was later dismantled and rebuilt on Plymouth Hoe, where it can still be visited.
+The largest alluvial gold nugget ever found, the "Welcome Stranger", was unearthed at Moliagul, Victoria, on 5 February 1869 by John Deason and Richard Oates, just a few centimetres below the surface. It weighed about 2,520 troy ounces gross (roughly 78 kg) and yielded about 2,284 troy ounces of gold once refined. There were no scales large enough to weigh it, so it was broken into pieces first.
 
-## The Fresnel lens
+## Witwatersrand, South Africa, 1886
 
-In 1822 the French physicist Augustin Fresnel presented a lens made of concentric rings of glass prisms. It captured far more of the lamp's light than the mirrors used before, while being much thinner and lighter than a solid lens of the same power. The first one was installed at the Cordouan lighthouse, at the mouth of the Gironde, in 1823. Fresnel lenses were graded by "orders": a first-order lens was the largest, used on major coastal lights, and a sixth-order lens the smallest, used in harbours. By the late nineteenth century most of the world's lighthouses used them.
+The discovery of gold on the Witwatersrand ridge in 1886 led to the founding of Johannesburg the same year. Unlike California's rivers, the Witwatersrand gold lay in deep reefs of rock, which required industrial mining companies rather than individual prospectors. The basin has been one of the richest sources of gold in history.
 
-Cordouan itself, completed in 1611, is often called the "king of lighthouses" for its Renaissance architecture, including a chapel inside the tower. It was listed as a UNESCO World Heritage Site in 2021.
+## Klondike, Canada, 1896
 
-## Keepers and automation
+In August 1896, George Carmack, Skookum Jim and Dawson Charlie found gold on Bonanza Creek, a tributary of the Klondike River in Yukon. When ships carrying gold reached Seattle and San Francisco in July 1897, the Klondike stampede began. An estimated 100,000 people set out for the Yukon, but only around 30,000 to 40,000 completed the journey, often hauling a year's worth of supplies over the Chilkoot or White Pass. By 1899, when gold was found at Nome in Alaska, the rush was largely over.
 
-For most of their history lighthouses depended on keepers, who trimmed wicks, wound the clockwork that turned the lens, and kept logs of weather and shipping. Isolated rock stations were usually staffed by three keepers working in rotation. Electrification and then automation made the job obsolete during the twentieth century. In the United Kingdom, the last manned lighthouse, North Foreland in Kent, was automated in November 1998.
+## Units and terms
 
-## Key figures
+- **Troy ounce**: the standard unit for precious metals, equal to about 31.1 grams (a regular ounce is about 28.3 g).
+- **Nugget**: a naturally occurring lump of native gold, usually found in alluvial deposits.
+- **Placer mining**: recovering gold from sand and gravel, typically by panning or sluicing.
+- **Au**: the chemical symbol for gold, from the Latin "aurum".
 
-| Lighthouse | Location | Completed | Notable for |
+| Rush | Region | Began | Notable for |
 | --- | --- | --- | --- |
-| Pharos | Alexandria, Egypt | c. 280 BC | One of the Seven Wonders of the Ancient World |
-| Tower of Hercules | A Coruña, Spain | 1st–2nd century AD | Oldest Roman lighthouse still in use |
-| Cordouan | Gironde estuary, France | 1611 | First Fresnel lens, 1823 |
-| Smeaton's Tower | Eddystone Rocks, England | 1759 | Template for rock lighthouses |
+| California | Sierra Nevada foothills, USA | 1848 | The forty-niners; San Francisco's boom |
+| Victoria | Ballarat and Bendigo, Australia | 1851 | Eureka Stockade; the Welcome Stranger nugget |
+| Witwatersrand | Transvaal, South Africa | 1886 | Deep-reef mining; founding of Johannesburg |
+| Klondike | Yukon, Canada | 1896 | The Chilkoot Pass stampede |
 `;

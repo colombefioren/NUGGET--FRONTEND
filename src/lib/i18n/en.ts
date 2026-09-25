@@ -36,8 +36,8 @@ const en = {
   "history.untitled": "Untitled",
 
   "empty.eyebrow": "Retrieval-augmented · multilingual",
-  "empty.title1": "Ask your documents",
-  "empty.title2": "anything.",
+  "empty.title1": "Ask your docs.",
+  "empty.title2": "Get the nugget.",
   "empty.body": "Nugget reads your files, finds the passages that matter, and answers with citations you can check, in whatever language you ask.",
   "empty.dropTitle": "Drop files to begin",
   "empty.dropBody": "Embeddings are computed on your machine. Nothing is indexed in the cloud.",

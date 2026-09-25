@@ -38,8 +38,8 @@ const zh: Translations = {
   "history.untitled": "未命名",
 
   "empty.eyebrow": "检索增强生成 · 多语言",
-  "empty.title1": "向你的文档",
-  "empty.title2": "提任何问题。",
+  "empty.title1": "向文档提问，",
+  "empty.title2": "淘出真金。",
   "empty.body": "Nugget 阅读你的文件，找出关键段落，并附上可核对的引用来回答，而且用你提问的语言。",
   "empty.dropTitle": "拖入文件即可开始",
   "empty.dropBody": "向量在你的电脑上计算，不会在云端建立索引。",

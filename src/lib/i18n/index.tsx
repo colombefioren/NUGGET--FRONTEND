@@ -2,12 +2,31 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
 import { usePersistentState } from "../storage";
+import ar from "./ar";
+import de from "./de";
 import en, { type MessageKey, type Plural, type Translations } from "./en";
+import es from "./es";
+import fr from "./fr";
+import it from "./it";
+import ja from "./ja";
+import pt from "./pt";
+import zh from "./zh";
 
-export const LOCALES = [{ code: "en", label: "English" }] as const;
+/** Labels are endonyms so every reader can find their own language. */
+export const LOCALES = [
+  { code: "en", label: "English" },
+  { code: "fr", label: "Français" },
+  { code: "es", label: "Español" },
+  { code: "de", label: "Deutsch" },
+  { code: "pt", label: "Português" },
+  { code: "it", label: "Italiano" },
+  { code: "ja", label: "日本語" },
+  { code: "zh", label: "中文" },
+  { code: "ar", label: "العربية" },
+] as const;
 export type Locale = (typeof LOCALES)[number]["code"];
 
-const dictionaries: Record<Locale, Translations> = { en };
+const dictionaries: Record<Locale, Translations> = { en, fr, es, de, pt, it, ja, zh, ar };
 const RTL = new Set<string>(["ar"]);
 
 type Vars = Record<string, string | number>;

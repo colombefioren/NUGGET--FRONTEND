@@ -38,7 +38,7 @@ export function Toasts({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: str
               >
                 <Icon className="h-3 w-3" strokeWidth={3} />
               </span>
-              <span className="line-clamp-2">{toast.text}</span>
+              <span className="line-clamp-2" dir="auto">{toast.text}</span>
             </motion.button>
           );
         })}

@@ -8,6 +8,7 @@ import { DocumentViewer } from "@/components/DocumentViewer";
 import { DropOverlay } from "@/components/DropOverlay";
 import { EmptyState } from "@/components/EmptyState";
 import { Exchange } from "@/components/Exchange";
+import { LanguageMenu } from "@/components/LanguageMenu";
 import { LogoMark } from "@/components/Logo";
 import { PasteDialog } from "@/components/PasteDialog";
 import { Sidebar } from "@/components/Sidebar";
@@ -143,6 +144,7 @@ function Lumen() {
       onPaste={() => setPasteOpen(true)}
       onExport={exportThread}
       onNavigate={() => setDrawer(false)}
+      footerExtra={<LanguageMenu />}
     />
   );
 

@@ -86,7 +86,7 @@ export function EmptyState({ docs, onPick, onBrowse, onSample, loadingSample }: 
                   className="group flex w-full items-center gap-4 py-3.5 text-start text-[0.95rem] text-muted transition-colors hover:text-fg"
                 >
                   <span className="font-mono text-2xs text-subtle">0{i + 1}</span>
-                  <span className="min-w-0 flex-1 truncate">{s}</span>
+                  <span className="min-w-0 flex-1 truncate text-start" dir="auto">{s}</span>
                   <ArrowUpRight className="h-4 w-4 shrink-0 text-subtle opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:text-accent rtl:-scale-x-100" />
                 </button>
               </motion.li>

@@ -76,7 +76,7 @@ export function DocumentViewer({ doc, focusChunk, onClose, onOnly, onDelete }: P
             <header className="flex items-start gap-3 border-b border-line px-5 pb-4 pt-5">
               <div className="min-w-0 flex-1">
                 <p className="eyebrow">{doc.kind}</p>
-                <h2 className="mt-1 break-words font-serif text-2xl leading-tight">{doc.name}</h2>
+                <h2 className="mt-1 break-words font-serif text-2xl leading-tight" dir="auto">{doc.name}</h2>
                 <p className="mt-1 font-mono text-2xs text-subtle">
                   {doc.pages ? `${t("library.pages", { count: doc.pages })} · ` : ""}
                   {t("library.passages", { count: doc.chunks })}

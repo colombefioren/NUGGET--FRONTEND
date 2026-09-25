@@ -47,7 +47,7 @@ export function SourceCard({ source, index, cited, highlighted, query, onHover, 
         >
           {index + 1}
         </span>
-        <span className="min-w-0 flex-1 truncate text-[0.8rem] font-medium text-fg">{source.source}</span>
+        <span className="min-w-0 flex-1 truncate text-start text-[0.8rem] font-medium text-fg" dir="auto">{source.source}</span>
         <span className="shrink-0 font-mono text-2xs text-subtle">
           {source.page ? t("answer.page", { page: source.page }) : `§${source.chunk + 1}`}
         </span>

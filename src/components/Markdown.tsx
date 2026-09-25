@@ -2,8 +2,12 @@
 
 import { memo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
+import remarkCjkFriendly from "remark-cjk-friendly";
 import remarkGfm from "remark-gfm";
 import { cn, linkCitations } from "@/lib/utils";
+
+// CommonMark refuses **bold** next to CJK punctuation; the CJK plugin relaxes that rule.
+const PLUGINS = [remarkGfm, remarkCjkFriendly];
 
 type Props = {
   text: string;
@@ -38,7 +42,7 @@ function MarkdownImpl({ text, streaming, renderCitation }: Props) {
         streaming && "streaming",
       )}
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown remarkPlugins={PLUGINS} components={components}>
         {linkCitations(text)}
       </ReactMarkdown>
     </div>

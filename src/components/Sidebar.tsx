@@ -57,7 +57,7 @@ function DocRow({ doc, checked, onToggle, onOpen, onDelete }: { doc: LibraryDoc;
         <button type="button" onClick={onToggle} className="flex min-w-0 flex-1 items-center gap-2.5 text-start" aria-pressed={checked} title={t("library.include")}>
           <Checkbox checked={checked} />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[0.8125rem] text-fg">{doc.name}</span>
+            <span className="block truncate text-start text-[0.8125rem] text-fg" dir="auto">{doc.name}</span>
             <span className="block font-mono text-2xs text-subtle">
               <span className="uppercase">{doc.kind}</span>
               {doc.pages ? ` · ${t("library.pages", { count: doc.pages })}` : ""} · {t("library.passages", { count: doc.chunks })}

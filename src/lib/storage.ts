@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const PREFIX = "lumen:";
+const PREFIX = "nugget:";
 
 export function readStorage<T>(key: string, fallback: T): T {
   try {

@@ -49,7 +49,7 @@ function pairs(messages: Message[]) {
   return out;
 }
 
-function Lumen() {
+function Nugget() {
   const { t, dir } = useI18n();
   const { toasts, push, dismiss } = useToasts();
   const library = useLibrary(push);
@@ -308,7 +308,7 @@ function Lumen() {
 export default function Page() {
   return (
     <I18nProvider>
-      <Lumen />
+      <Nugget />
     </I18nProvider>
   );
 }
